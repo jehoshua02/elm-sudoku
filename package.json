@@ -1,0 +1,29 @@
+{
+  "name": "elm-sudoku",
+  "version": "0.1.0",
+  "description": "A sudoku programming exercise implemented in elm",
+  "main": "Sudoku.elm",
+  "scripts": {
+    "test": "elm-test SudokuTests.elm"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jehoshua02/elm-sudoku.git"
+  },
+  "keywords": [
+    "elm",
+    "sudoku",
+    "exercise",
+    "kata"
+  ],
+  "author": "Joshua Stoutenburg <jehoshua02@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jehoshua02/elm-sudoku/issues"
+  },
+  "homepage": "https://github.com/jehoshua02/elm-sudoku#readme",
+  "devDependencies": {
+    "elm": "^0.17.1",
+    "elm-test": "^0.17.3"
+  }
+}

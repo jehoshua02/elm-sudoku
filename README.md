@@ -7,14 +7,13 @@ A sudoku programming exercise implemented in [elm](http://elm-lang.org/).
 ## Setup
 
 ```
-nvm use 6
-npm install -g elm@0.17.1 elm-test@0.17.3
+npm install
 ```
 
 ## Tests
 
 ```
-elm-test SudokuTests.elm
+npm test
 ```
 
 ## Formatting
