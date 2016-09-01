@@ -13,8 +13,7 @@ tests =
         [ describe "fromList"
             [ test "should error a short list" <|
                 \() ->
-                    Expect.equal (Err InvalidLength) (Sudoku.fromList [1,2,3])
-
+                    Expect.equal (Err InvalidLength) (Sudoku.fromList [ 1, 2, 3 ])
             , test "should error a long list" <|
                 \() ->
                     let
@@ -34,7 +33,6 @@ tests =
                             ]
                     in
                         Expect.equal (Err InvalidLength) (Sudoku.fromList xs)
-
             , test "should error on values greater than 9" <|
                 \() ->
                     let
@@ -53,7 +51,6 @@ tests =
                             ]
                     in
                         Expect.equal (Err OutOfRange) (Sudoku.fromList xs)
-
             , test "should error on values less than 0" <|
                 \() ->
                     let
@@ -72,7 +69,6 @@ tests =
                             ]
                     in
                         Expect.equal (Err OutOfRange) (Sudoku.fromList xs)
-
             , test "should pass" <|
                 \() ->
                     let
@@ -110,15 +106,15 @@ tests =
                             , 1,5,4, 9,3,8, 6,7,2
                             ]
                         rows =
-                            [ [2,9,5,7,4,3,8,6,1]
-                            , [4,3,1,8,6,5,9,2,7]
-                            , [8,7,6,1,9,2,5,4,3]
-                            , [3,8,7,4,5,9,2,1,6]
-                            , [6,1,2,3,8,7,4,9,5]
-                            , [5,4,9,2,1,6,7,3,8]
-                            , [7,6,3,5,3,4,1,8,9]
-                            , [9,2,8,6,7,1,3,5,4]
-                            , [1,5,4,9,3,8,6,7,2]
+                            [ [ 2, 9, 5, 7, 4, 3, 8, 6, 1 ]
+                            , [ 4, 3, 1, 8, 6, 5, 9, 2, 7 ]
+                            , [ 8, 7, 6, 1, 9, 2, 5, 4, 3 ]
+                            , [ 3, 8, 7, 4, 5, 9, 2, 1, 6 ]
+                            , [ 6, 1, 2, 3, 8, 7, 4, 9, 5 ]
+                            , [ 5, 4, 9, 2, 1, 6, 7, 3, 8 ]
+                            , [ 7, 6, 3, 5, 3, 4, 1, 8, 9 ]
+                            , [ 9, 2, 8, 6, 7, 1, 3, 5, 4 ]
+                            , [ 1, 5, 4, 9, 3, 8, 6, 7, 2 ]
                             ]
                     in
                         Expect.equal (Ok rows) (Result.map Sudoku.rows puzzle)
@@ -141,15 +137,15 @@ tests =
                             , 1,5,4, 9,3,8, 6,7,2
                             ]
                         columns =
-                            [ [2,4,8,3,6,5,7,9,1]
-                            , [9,3,7,8,1,4,6,2,5]
-                            , [5,1,6,7,2,9,3,8,4]
-                            , [7,8,1,4,3,2,5,6,9]
-                            , [4,6,9,5,8,1,3,7,3]
-                            , [3,5,2,9,7,6,4,1,8]
-                            , [8,9,5,2,4,7,1,3,6]
-                            , [6,2,4,1,9,3,8,5,7]
-                            , [1,7,3,6,5,8,9,4,2]
+                            [ [ 2, 4, 8, 3, 6, 5, 7, 9, 1 ]
+                            , [ 9, 3, 7, 8, 1, 4, 6, 2, 5 ]
+                            , [ 5, 1, 6, 7, 2, 9, 3, 8, 4 ]
+                            , [ 7, 8, 1, 4, 3, 2, 5, 6, 9 ]
+                            , [ 4, 6, 9, 5, 8, 1, 3, 7, 3 ]
+                            , [ 3, 5, 2, 9, 7, 6, 4, 1, 8 ]
+                            , [ 8, 9, 5, 2, 4, 7, 1, 3, 6 ]
+                            , [ 6, 2, 4, 1, 9, 3, 8, 5, 7 ]
+                            , [ 1, 7, 3, 6, 5, 8, 9, 4, 2 ]
                             ]
                     in
                         Expect.equal (Ok columns) (Result.map Sudoku.columns puzzle)
@@ -172,15 +168,15 @@ tests =
                             , 1,5,4, 9,3,8, 6,7,2
                             ]
                         groups =
-                            [ [2,9,5,4,3,1,8,7,6]
-                            , [7,4,3,8,6,5,1,9,2]
-                            , [8,6,1,9,2,7,5,4,3]
-                            , [3,8,7,6,1,2,5,4,9]
-                            , [4,5,9,3,8,7,2,1,6]
-                            , [2,1,6,4,9,5,7,3,8]
-                            , [7,6,3,9,2,8,1,5,4]
-                            , [5,3,4,6,7,1,9,3,8]
-                            , [1,8,9,3,5,4,6,7,2]
+                            [ [ 2, 9, 5, 4, 3, 1, 8, 7, 6 ]
+                            , [ 7, 4, 3, 8, 6, 5, 1, 9, 2 ]
+                            , [ 8, 6, 1, 9, 2, 7, 5, 4, 3 ]
+                            , [ 3, 8, 7, 6, 1, 2, 5, 4, 9 ]
+                            , [ 4, 5, 9, 3, 8, 7, 2, 1, 6 ]
+                            , [ 2, 1, 6, 4, 9, 5, 7, 3, 8 ]
+                            , [ 7, 6, 3, 9, 2, 8, 1, 5, 4 ]
+                            , [ 5, 3, 4, 6, 7, 1, 9, 3, 8 ]
+                            , [ 1, 8, 9, 3, 5, 4, 6, 7, 2 ]
                             ]
                     in
                         Expect.equal (Ok groups) (Result.map Sudoku.groups puzzle)
@@ -229,7 +225,7 @@ tests =
 
 main : Program Value
 main =
-  run emit tests
+    run emit tests
 
 
 port emit : ( String, Value ) -> Cmd msg
