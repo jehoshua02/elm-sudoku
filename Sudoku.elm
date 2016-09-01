@@ -32,7 +32,7 @@ fromList xs =
 
 solved : Puzzle -> Bool
 solved xs =
-    rows xs ++ columns xs ++ groups xs |> List.map List.sort |> Debug.log "wat" |> List.all valid
+    rows xs ++ columns xs ++ groups xs |> List.all valid
 
 
 rows : Puzzle -> List (List Value)
