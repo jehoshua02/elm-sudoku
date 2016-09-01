@@ -1,8 +1,8 @@
 {
-    "version": "3.0.0",
-    "summary": "Exercism problems in Elm.",
-    "repository": "https://github.com/exercism/xelm.git",
-    "license": "BSD3",
+    "version": "0.1.0",
+    "summary": "A sudoku programming exercise implemented in elm",
+    "repository": "https://github.com/jehoshua02/elm-sudoku.git",
+    "license": "MIT",
     "source-directories": [
         "."
     ],
