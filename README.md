@@ -1,5 +1,7 @@
 # Elm Sudoku
 
+[![Build Status](https://travis-ci.org/jehoshua02/elm-sudoku.svg?branch=master)](https://travis-ci.org/jehoshua02/elm-sudoku)
+
 A sudoku programming exercise implemented in [elm](http://elm-lang.org/).
 
 ## Setup
