@@ -219,40 +219,6 @@ tests =
                     in
                         Expect.equal (Ok True) (Result.map Sudoku.solved puzzle)
             ]
-        , describe "coordToGroup"
-            ([ -- top (0-2)
-               ( ( 0, 0 ), 0 )
-             , ( ( 2, 2 ), 0 )
-             , ( ( 3, 0 ), 1 )
-             , ( ( 5, 2 ), 1 )
-             , ( ( 6, 0 ), 2 )
-             , ( ( 8, 2 ), 2 )
-               -- middle (3-5)
-             , ( ( 0, 3 ), 3 )
-             , ( ( 2, 5 ), 3 )
-             , ( ( 3, 3 ), 4 )
-             , ( ( 5, 5 ), 4 )
-             , ( ( 6, 3 ), 5 )
-             , ( ( 8, 5 ), 5 )
-               -- bottom (6-8)
-             , ( ( 0, 6 ), 6 )
-             , ( ( 2, 8 ), 6 )
-             , ( ( 3, 6 ), 7 )
-             , ( ( 5, 8 ), 7 )
-             , ( ( 6, 6 ), 8 )
-             , ( ( 8, 8 ), 8 )
-             ]
-                |> List.map
-                    (\( coord, expected ) ->
-                        let
-                            should =
-                                ("should map " ++ (toString coord) ++ " to " ++ (toString expected))
-                        in
-                            test should <|
-                                \() ->
-                                    Expect.equal expected (Sudoku.coordToGroup coord)
-                    )
-            )
         , describe "possible"
             [ test "should error on invalid coord" <|
                 \() ->
@@ -328,7 +294,7 @@ tests =
                             ]
                     in
                         Expect.equal (Ok [ 2, 9 ]) ((Sudoku.fromList puzzle) `Result.andThen` (Sudoku.possible ( 0, 0 )))
-            , test "should return more all nine" <|
+            , test "should return all nine" <|
                 \() ->
                     let
                         puzzle =

@@ -1,6 +1,6 @@
-module Sudoku exposing (fromList, Error(..), solved, possible, rows, columns, groups, coordToGroup)
+module Sudoku exposing (fromList, Error(..), rows, columns, groups, solved, possible)
 
-import List.Extra exposing (groupsOf, transpose)
+import List.Extra exposing (groupsOf, transpose, getAt, removeAt)
 import Set
 
 
@@ -32,11 +32,6 @@ fromList xs =
         Ok xs
 
 
-solved : Puzzle -> Bool
-solved xs =
-    rows xs ++ columns xs ++ groups xs |> List.all valid
-
-
 rows : Puzzle -> List (List Value)
 rows =
     groupsOf 9
@@ -66,9 +61,9 @@ groups =
             List.map List.concat
 
 
-valid : List Value -> Bool
-valid =
-    List.sort >> (==) [1..9]
+solved : Puzzle -> Bool
+solved xs =
+    rows xs ++ columns xs ++ groups xs |> List.all (List.sort >> (==) [1..9])
 
 
 possible : Coord -> Puzzle -> Result Error (List Int)
@@ -78,20 +73,22 @@ possible ( x, y ) p =
     else
         let
             row =
-                select x (rows p) |> Maybe.map (others y)
+                getAt x (rows p) |> Maybe.map (removeAt y)
 
             column =
-                select y (columns p) |> Maybe.map (others x)
+                getAt y (columns p) |> Maybe.map (removeAt x)
 
             group =
                 let
-                    z =
-                        coordToGroup ( x, y )
+                    g =
+                        -- index of group
+                        x // 3 + y // 3 * 3
 
                     i =
-                        coordToIndex ( x % 3, y % 3 )
+                        -- index within group
+                        (x % 3) // 3 + (y % 3) * 3
                 in
-                    select z (groups p) |> Maybe.map (others i)
+                    getAt g (groups p) |> Maybe.map (removeAt i)
         in
             Maybe.map3 (\a b c -> a ++ b ++ c) row column group
                 |> Maybe.withDefault []
@@ -99,23 +96,3 @@ possible ( x, y ) p =
                 |> Set.diff (Set.fromList [1..9])
                 |> Set.toList
                 |> Ok
-
-
-select : Int -> List a -> Maybe a
-select n xs =
-    xs |> List.drop (n - 1) |> List.head
-
-
-others : Int -> List a -> List a
-others i xs =
-    List.take (i - 1) xs ++ List.drop (i + 1) xs
-
-
-coordToGroup : Coord -> Int
-coordToGroup ( x, y ) =
-    x // 3 + y // 3 * 3
-
-
-coordToIndex : Coord -> Int
-coordToIndex ( x, y ) =
-    x // 3 + y * 3
