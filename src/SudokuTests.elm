@@ -311,7 +311,7 @@ tests =
                             , 0,5,4, 9,3,8, 6,7,2
                             ]
                     in
-                        Expect.equal (Ok [ 1..9 ]) ((Sudoku.fromList puzzle) `Result.andThen` (Sudoku.possible ( 0, 0 )))
+                        Expect.equal (Ok [1..9]) ((Sudoku.fromList puzzle) `Result.andThen` (Sudoku.possible ( 0, 0 )))
             ]
         ]
 

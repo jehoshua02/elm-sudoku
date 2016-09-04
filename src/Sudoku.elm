@@ -1,4 +1,13 @@
-module Sudoku exposing (fromList, Error(..), rows, columns, groups, solved, possible)
+module Sudoku
+    exposing
+        ( fromList
+        , Error(..)
+        , rows
+        , columns
+        , groups
+        , solved
+        , possible
+        )
 
 import List.Extra exposing (groupsOf, transpose, getAt, removeAt)
 import Set
