@@ -4,7 +4,7 @@
   "description": "A sudoku programming exercise implemented in elm",
   "main": "Sudoku.elm",
   "scripts": {
-    "test": "elm-test SudokuTests.elm"
+    "test": "elm-test ./src/SudokuTests.elm"
   },
   "repository": {
     "type": "git",

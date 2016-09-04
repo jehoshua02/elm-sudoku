@@ -4,7 +4,7 @@
     "repository": "https://github.com/jehoshua02/elm-sudoku.git",
     "license": "MIT",
     "source-directories": [
-        "."
+        "./src"
     ],
     "exposed-modules": [],
     "dependencies": {
