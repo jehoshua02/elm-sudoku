@@ -17,3 +17,4 @@
 + Sudoku.make
   + remove numbers until puzzle is unsolvable?
 + adhere to elm-package requirements/conventions (as an exercise, not necessarily to publish)
++ alternate puzzle sizes
