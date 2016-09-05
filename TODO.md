@@ -2,6 +2,13 @@
 
 # TODO
 
++ Sudoku.solve
+  + different techniques for eliminating possibilities
+  + sequence of techniques
+  + recursion
++ Sudoku.make
++ adhere to elm-package requirements/conventions (as an exercise, not necessarily to publish)
++ alternate puzzle sizes
 + split code
   + module per function
   + each module imports dependencies
@@ -10,11 +17,3 @@
   + colocated
   + run all at once
   + single install
-+ Sudoku.solve
-  + different techniques for eliminating possibilities
-  + sequence of techniques
-  + recursion
-+ Sudoku.make
-  + remove numbers until puzzle is unsolvable?
-+ adhere to elm-package requirements/conventions (as an exercise, not necessarily to publish)
-+ alternate puzzle sizes
