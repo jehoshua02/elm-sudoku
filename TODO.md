@@ -22,7 +22,8 @@
     + single possibility
       + only one possibility
       + fill and recalculate possibilities
-  + sequence of techniques
+  + optimizing sequence of techniques
+  + lots and lots of testing with actual puzzles with known solutions
 + Sudoku.make
 + adhere to elm-package requirements/conventions (as an exercise, not necessarily to publish)
 + alternate puzzle sizes
