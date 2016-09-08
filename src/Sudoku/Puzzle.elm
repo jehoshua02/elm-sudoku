@@ -1,12 +1,12 @@
-module Sudoku
+module Sudoku.Puzzle
     exposing
-        ( fromList
+        ( Puzzle
+        , fromList
         , Error(..)
         , rows
         , columns
         , groups
         , solved
-        , possible
         )
 
 import List.Extra exposing (groupsOf, transpose, getAt, removeAt)
@@ -73,35 +73,3 @@ groups =
 solved : Puzzle -> Bool
 solved xs =
     rows xs ++ columns xs ++ groups xs |> List.all (List.sort >> (==) [1..9])
-
-
-possible : Coord -> Puzzle -> Result Error (List Int)
-possible ( x, y ) p =
-    if (x < 0 || 8 < x || y < 0 || 8 < y) then
-        Err OutOfRange
-    else
-        let
-            row =
-                getAt x (rows p) |> Maybe.map (removeAt y)
-
-            column =
-                getAt y (columns p) |> Maybe.map (removeAt x)
-
-            group =
-                let
-                    g =
-                        -- index of group
-                        x // 3 + y // 3 * 3
-
-                    i =
-                        -- index within group
-                        (x % 3) // 3 + (y % 3) * 3
-                in
-                    getAt g (groups p) |> Maybe.map (removeAt i)
-        in
-            Maybe.map3 (\a b c -> a ++ b ++ c) row column group
-                |> Maybe.withDefault []
-                |> Set.fromList
-                |> Set.diff (Set.fromList [1..9])
-                |> Set.toList
-                |> Ok

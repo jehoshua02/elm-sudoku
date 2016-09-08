@@ -1,19 +1,17 @@
-port module Main exposing (..)
+port module Sudoku.PuzzleTests exposing (..)
 
-import Test.Runner.Node exposing (run)
-import Json.Encode exposing (Value)
 import Test exposing (..)
 import Expect
-import Sudoku exposing (Error(..))
+import Sudoku.Puzzle as Puzzle exposing (Error(..))
 
 
 tests : Test
 tests =
-    describe "Sudoku"
+    describe "Puzzle"
         [ describe "fromList"
             [ test "should error a short list" <|
                 \() ->
-                    Expect.equal (Err InvalidLength) (Sudoku.fromList [ 1, 2, 3 ])
+                    Expect.equal (Err InvalidLength) (Puzzle.fromList [ 1, 2, 3 ])
             , test "should error a long list" <|
                 \() ->
                     let
@@ -32,7 +30,7 @@ tests =
                             , 1,5,4, 9,3,8, 6,7,2
                             ]
                     in
-                        Expect.equal (Err InvalidLength) (Sudoku.fromList xs)
+                        Expect.equal (Err InvalidLength) (Puzzle.fromList xs)
             , test "should error on values greater than 9" <|
                 \() ->
                     let
@@ -50,7 +48,7 @@ tests =
                             , 1,5,4, 9,3,8, 6,7,2
                             ]
                     in
-                        Expect.equal (Err OutOfRange) (Sudoku.fromList xs)
+                        Expect.equal (Err OutOfRange) (Puzzle.fromList xs)
             , test "should error on values less than 0" <|
                 \() ->
                     let
@@ -68,7 +66,7 @@ tests =
                             , 1,5,4, 9,3,8, 6,7,2
                             ]
                     in
-                        Expect.equal (Err OutOfRange) (Sudoku.fromList xs)
+                        Expect.equal (Err OutOfRange) (Puzzle.fromList xs)
             , test "should pass" <|
                 \() ->
                     let
@@ -86,13 +84,13 @@ tests =
                             , 1,5,4, 9,3,8, 6,7,2
                             ]
                     in
-                        Expect.equal (Ok xs) (Sudoku.fromList xs)
+                        Expect.equal (Ok xs) (Puzzle.fromList xs)
             ]
         , describe "rows"
             [ test "should return rows" <|
                 \() ->
                     let
-                        puzzle = Sudoku.fromList
+                        puzzle = Puzzle.fromList
                             [ 2,9,5, 7,4,3, 8,6,1
                             , 4,3,1, 8,6,5, 9,2,7
                             , 8,7,6, 1,9,2, 5,4,3
@@ -117,13 +115,13 @@ tests =
                             , [ 1, 5, 4, 9, 3, 8, 6, 7, 2 ]
                             ]
                     in
-                        Expect.equal (Ok rows) (Result.map Sudoku.rows puzzle)
+                        Expect.equal (Ok rows) (Result.map Puzzle.rows puzzle)
             ]
         , describe "columns"
             [ test "should return columns" <|
                 \() ->
                     let
-                        puzzle = Sudoku.fromList
+                        puzzle = Puzzle.fromList
                             [ 2,9,5, 7,4,3, 8,6,1
                             , 4,3,1, 8,6,5, 9,2,7
                             , 8,7,6, 1,9,2, 5,4,3
@@ -148,13 +146,13 @@ tests =
                             , [ 1, 7, 3, 6, 5, 8, 9, 4, 2 ]
                             ]
                     in
-                        Expect.equal (Ok columns) (Result.map Sudoku.columns puzzle)
+                        Expect.equal (Ok columns) (Result.map Puzzle.columns puzzle)
             ]
         , describe "groups"
             [ test "should return groups" <|
                 \() ->
                     let
-                        puzzle = Sudoku.fromList
+                        puzzle = Puzzle.fromList
                             [ 2,9,5, 7,4,3, 8,6,1
                             , 4,3,1, 8,6,5, 9,2,7
                             , 8,7,6, 1,9,2, 5,4,3
@@ -179,13 +177,13 @@ tests =
                             , [ 1, 8, 9, 3, 5, 4, 6, 7, 2 ]
                             ]
                     in
-                        Expect.equal (Ok groups) (Result.map Sudoku.groups puzzle)
+                        Expect.equal (Ok groups) (Result.map Puzzle.groups puzzle)
             ]
         , describe "solved"
             [ test "should say this puzzle is not solved" <|
                 \() ->
                     let
-                        puzzle = Sudoku.fromList
+                        puzzle = Puzzle.fromList
                             [ 0,9,5, 7,4,3, 8,6,1
                             , 4,3,1, 8,6,5, 9,2,7
                             , 8,7,6, 1,9,2, 5,4,3
@@ -199,11 +197,11 @@ tests =
                             , 1,5,4, 9,3,8, 6,7,2
                             ]
                     in
-                        Expect.equal (Ok False) (Result.map Sudoku.solved puzzle)
+                        Expect.equal (Ok False) (Result.map Puzzle.solved puzzle)
             , test "should say this puzzle is solved" <|
                 \() ->
                     let
-                        puzzle = Sudoku.fromList
+                        puzzle = Puzzle.fromList
                             [ 2,9,5, 7,4,3, 8,6,1
                             , 4,3,1, 8,6,5, 9,2,7
                             , 8,7,6, 1,9,2, 5,4,3
@@ -217,108 +215,6 @@ tests =
                             , 1,5,4, 9,3,8, 6,7,2
                             ]
                     in
-                        Expect.equal (Ok True) (Result.map Sudoku.solved puzzle)
-            ]
-        , describe "possible"
-            [ test "should error on invalid coord" <|
-                \() ->
-                    let
-                        puzzle =
-                            [ 0,9,5, 7,4,3, 8,6,1
-                            , 4,3,1, 8,6,5, 9,2,7
-                            , 8,7,6, 1,9,2, 5,4,3
-
-                            , 3,8,7, 4,5,9, 2,1,6
-                            , 6,1,2, 3,8,7, 4,9,5
-                            , 5,4,9, 2,1,6, 7,3,8
-
-                            , 7,6,3, 5,2,4, 1,8,9
-                            , 9,2,8, 6,7,1, 3,5,4
-                            , 1,5,4, 9,3,8, 6,7,2
-                            ]
-                    in
-                        Expect.equal (Err OutOfRange) ((Sudoku.fromList puzzle) `Result.andThen` (Sudoku.possible ( -1, 0 )))
-            , test "should return one possible" <|
-                \() ->
-                    let
-                        puzzle =
-                            [ 0,9,5, 7,4,3, 8,6,1
-                            , 4,3,1, 8,6,5, 9,2,7
-                            , 8,7,6, 1,9,2, 5,4,3
-
-                            , 3,8,7, 4,5,9, 2,1,6
-                            , 6,1,2, 3,8,7, 4,9,5
-                            , 5,4,9, 2,1,6, 7,3,8
-
-                            , 7,6,3, 5,2,4, 1,8,9
-                            , 9,2,8, 6,7,1, 3,5,4
-                            , 1,5,4, 9,3,8, 6,7,2
-                            ]
-                    in
-                        Expect.equal (Ok [ 2 ]) ((Sudoku.fromList puzzle) `Result.andThen` (Sudoku.possible ( 0, 0 )))
-            ]
-        , describe "possible"
-            [ test "should return one possible even for occupied coord" <|
-                \() ->
-                    let
-                        puzzle =
-                            [ 2,9,5, 7,4,3, 8,6,1
-                            , 4,3,1, 8,6,5, 9,2,7
-                            , 8,7,6, 1,9,2, 5,4,3
-
-                            , 3,8,7, 4,5,9, 2,1,6
-                            , 6,1,2, 3,8,7, 4,9,5
-                            , 5,4,9, 2,1,6, 7,3,8
-
-                            , 7,6,3, 5,2,4, 1,8,9
-                            , 9,2,8, 6,7,1, 3,5,4
-                            , 1,5,4, 9,3,8, 6,7,2
-                            ]
-                    in
-                        Expect.equal (Ok [ 2 ]) ((Sudoku.fromList puzzle) `Result.andThen` (Sudoku.possible ( 0, 0 )))
-            , test "should return more than one" <|
-                \() ->
-                    let
-                        puzzle =
-                            [ 0,0,5, 7,4,3, 8,6,1
-                            , 4,3,1, 8,6,5, 9,2,7
-                            , 8,7,6, 1,9,2, 5,4,3
-
-                            , 3,8,7, 4,5,9, 2,1,6
-                            , 6,1,2, 3,8,7, 4,9,5
-                            , 5,4,9, 2,1,6, 7,3,8
-
-                            , 7,6,3, 5,2,4, 1,8,9
-                            , 0,2,8, 6,7,1, 3,5,4
-                            , 1,5,4, 9,3,8, 6,7,2
-                            ]
-                    in
-                        Expect.equal (Ok [ 2, 9 ]) ((Sudoku.fromList puzzle) `Result.andThen` (Sudoku.possible ( 0, 0 )))
-            , test "should return all nine" <|
-                \() ->
-                    let
-                        puzzle =
-                            [ 0,0,0, 0,0,0, 0,0,0
-                            , 0,0,0, 8,6,5, 9,2,7
-                            , 0,0,0, 1,9,2, 5,4,3
-
-                            , 0,8,7, 4,5,9, 2,1,6
-                            , 0,1,2, 3,8,7, 4,9,5
-                            , 0,4,9, 2,1,6, 7,3,8
-
-                            , 0,6,3, 5,2,4, 1,8,9
-                            , 0,2,8, 6,7,1, 3,5,4
-                            , 0,5,4, 9,3,8, 6,7,2
-                            ]
-                    in
-                        Expect.equal (Ok [1..9]) ((Sudoku.fromList puzzle) `Result.andThen` (Sudoku.possible ( 0, 0 )))
+                        Expect.equal (Ok True) (Result.map Puzzle.solved puzzle)
             ]
         ]
-
-
-main : Program Value
-main =
-    run emit tests
-
-
-port emit : ( String, Value ) -> Cmd msg
