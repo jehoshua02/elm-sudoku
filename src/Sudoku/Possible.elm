@@ -22,26 +22,24 @@ initialize =
 eliminateUsed : Puzzle -> Possible -> Possible
 eliminateUsed puzzle possible =
     puzzle |> List.indexedMap
-        (\i x ->
-            if x /= 0 then
-                [x]
+        (\i v ->
+            if v /= 0 then
+                [v]
             else
                 possible
-                |> getAt i
-                |> Maybe.withDefault []
-                |> Set.fromList
-                |> flip Set.diff (Set.fromList (used i puzzle))
-                |> Set.toList
+                    |> getAt i
+                    |> Maybe.withDefault []
+                    |> Set.fromList
+                    |> flip Set.diff (Set.fromList (used i puzzle))
+                    |> Set.toList
         )
 
 
 used : Int -> Puzzle -> List Int
 used i puzzle =
     let
-        x =
-            i % 9
-        y =
-            i // 9
+        (x, y) =
+            (i % 9, i // 9)
 
         row =
             getAt x (rows puzzle) |> Maybe.map (removeAt y)
