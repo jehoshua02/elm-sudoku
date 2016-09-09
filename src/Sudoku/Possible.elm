@@ -21,19 +21,19 @@ initialize =
 
 eliminateUsed : Puzzle -> Possible -> Possible
 eliminateUsed puzzle possible =
-    puzzle
-        |> List.indexedMap
-            (\i x ->
-                if x /= 0 then
-                    [x]
-                else
-                    possible
-                    |> getAt i
-                    |> Maybe.withDefault []
-                    |> Set.fromList
-                    |> flip Set.diff (Set.fromList (used i puzzle))
-                    |> Set.toList
-            )
+    puzzle |> List.indexedMap
+        (\i x ->
+            if x /= 0 then
+                [x]
+            else
+                possible
+                |> getAt i
+                |> Maybe.withDefault []
+                |> Set.fromList
+                |> flip Set.diff (Set.fromList (used i puzzle))
+                |> Set.toList
+        )
+
 
 used : Int -> Puzzle -> List Int
 used i puzzle =

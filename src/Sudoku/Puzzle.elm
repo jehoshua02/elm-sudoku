@@ -14,16 +14,8 @@ import List.Extra exposing (groupsOf, transpose, getAt, removeAt)
 import Set
 
 
-type alias Coord =
-    ( Int, Int )
-
-
-type alias Value =
-    Int
-
-
 type alias Puzzle =
-    List Value
+    List Int
 
 
 type Error
@@ -47,17 +39,17 @@ fromList xs =
         Ok xs
 
 
-rows : Puzzle -> List (List Value)
+rows : Puzzle -> List (List Int)
 rows =
     groupsOf 9
 
 
-columns : Puzzle -> List (List Value)
+columns : Puzzle -> List (List Int)
 columns =
     rows >> transpose
 
 
-groups : Puzzle -> List (List Value)
+groups : Puzzle -> List (List Int)
 groups =
     -- separate rows into 3 sections
     rows
