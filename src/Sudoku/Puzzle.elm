@@ -1,6 +1,7 @@
 module Sudoku.Puzzle
     exposing
         ( Puzzle
+        , empty
         , fromList
         , Error(..)
         , rows
@@ -29,6 +30,11 @@ type Error
     = InvalidLength
     | OutOfRange
     | Unsolvable
+
+
+empty : Puzzle
+empty =
+    List.repeat (9 * 9) 0
 
 
 fromList : List Int -> Result Error Puzzle

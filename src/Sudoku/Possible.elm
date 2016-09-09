@@ -2,7 +2,12 @@ module Sudoku.Possible
     exposing
         ( Possible
         , initialize
+        , eliminateUsed
         )
+
+import Set
+import Sudoku.Puzzle exposing (Puzzle, rows, columns, groups)
+import List.Extra exposing (getAt, removeAt, unique)
 
 
 type alias Possible =
@@ -13,3 +18,50 @@ initialize : Possible
 initialize =
     List.repeat (9 * 9) [1..9]
 
+
+eliminateUsed : Puzzle -> Possible -> Possible
+eliminateUsed puzzle possible =
+    puzzle
+        |> List.indexedMap
+            (\i x ->
+                if x /= 0 then
+                    [x]
+                else
+                    possible
+                    |> getAt i
+                    |> Maybe.withDefault []
+                    |> Set.fromList
+                    |> flip Set.diff (Set.fromList (used i puzzle))
+                    |> Set.toList
+            )
+
+used : Int -> Puzzle -> List Int
+used i puzzle =
+    let
+        x =
+            i % 9
+        y =
+            i // 9
+
+        row =
+            getAt x (rows puzzle) |> Maybe.map (removeAt y)
+
+        column =
+            getAt y (columns puzzle) |> Maybe.map (removeAt x)
+
+        group =
+            let
+                g =
+                    -- index of group
+                    x // 3 + y // 3 * 3
+
+                i =
+                    -- index within group
+                    (x % 3) // 3 + (y % 3) * 3
+            in
+                getAt g (groups puzzle) |> Maybe.map (removeAt i)
+    in
+        Maybe.map3 (\a b c -> a ++ b ++ c) row column group
+            |> Maybe.withDefault []
+            |> List.filter ((/=) 0)
+            |> unique
