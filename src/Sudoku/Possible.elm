@@ -7,7 +7,7 @@ module Sudoku.Possible
         )
 
 import Set
-import Sudoku.Puzzle exposing (Puzzle, empty)
+import Sudoku.Puzzle exposing (Puzzle)
 import Sudoku.Grid exposing (rows, columns, groups)
 import List.Extra exposing (getAt, removeAt, unique)
 

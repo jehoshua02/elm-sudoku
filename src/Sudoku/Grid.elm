@@ -5,7 +5,7 @@ module Sudoku.Grid
         , groups
         )
 
-import List.Extra exposing (groupsOf, transpose, getAt, removeAt)
+import List.Extra exposing (groupsOf, transpose)
 
 
 rows : List a -> List (List a)
