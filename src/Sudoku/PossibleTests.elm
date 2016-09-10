@@ -10,7 +10,26 @@ import List.Extra exposing (setAt, removeAt)
 tests : Test
 tests =
     describe "Possible"
-        [ describe "initialize"
+        [ describe "toPuzzle"
+            [ test "should convert possibilities to puzzle" <|
+                \() ->
+                    let
+                        possible =
+                            List.repeat (9 * 9) [1..9]
+                                |> set 0 [2]
+                                |> set 10 [7]
+
+                        actual =
+                            Possible.toPuzzle possible
+
+                        expected =
+                            Puzzle.empty
+                                |> set 0 2
+                                |> set 10 7
+                    in
+                        Expect.equal expected actual
+            ]
+        , describe "initialize"
             [ test "should return a new list of possibilities" <|
                 \() ->
                     let

@@ -2,6 +2,7 @@ module Sudoku.Possible
     exposing
         ( Possible
         , initialize
+        , toPuzzle
         , eliminateUsed
         )
 
@@ -15,17 +16,6 @@ type alias Possible =
     List (List Int)
 
 
-toPuzzle : Possible -> Puzzle
-toPuzzle =
-    List.map
-        (\xs ->
-            if List.length xs == 1 then
-                get 0 0 xs
-            else
-                0
-        )
-
-
 initialize : Puzzle -> Possible
 initialize puzzle =
     puzzle
@@ -36,6 +26,17 @@ initialize puzzle =
                 else
                     [ x ]
             )
+
+
+toPuzzle : Possible -> Puzzle
+toPuzzle =
+    List.map
+        (\xs ->
+            if List.length xs == 1 then
+                get 0 0 xs
+            else
+                0
+        )
 
 
 eliminateUsed : Possible -> Possible
