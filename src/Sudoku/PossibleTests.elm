@@ -15,10 +15,25 @@ tests =
                 \() ->
                     let
                         actual =
-                            Possible.initialize
+                            Possible.initialize Puzzle.empty
 
                         expected =
                             List.repeat (9 * 9) [1..9]
+                    in
+                        Expect.equal expected actual
+            , test "should assume one possibility for filled spaces" <|
+                \() ->
+                    let
+                        puzzle =
+                            Puzzle.empty
+                                |> set 0 2
+
+                        actual =
+                            Possible.initialize puzzle
+
+                        expected =
+                            List.repeat (9 * 9) [1..9]
+                                |> set 0 [ 2 ]
                     in
                         Expect.equal expected actual
             ]
@@ -27,99 +42,83 @@ tests =
                 \() ->
                     let
                         expected =
-                            Possible.initialize
+                            Possible.initialize Puzzle.empty
 
                         actual =
-                            Possible.eliminateUsed Puzzle.empty expected
+                            Possible.eliminateUsed expected
                     in
                         Expect.equal expected actual
             , test "should eliminate used numbers" <|
                 \() ->
                     let
                         puzzle =
-                            [ 2,0,0, 0,0,0, 0,0,0
-                            , 0,0,0, 0,0,0, 0,0,0
-                            , 0,0,0, 0,0,0, 0,0,0
-
-                            , 0,0,0, 0,0,0, 0,0,0
-                            , 0,0,0, 0,0,0, 0,0,0
-                            , 0,0,0, 0,0,0, 0,0,0
-
-                            , 0,0,0, 0,0,0, 0,0,0
-                            , 0,0,0, 0,0,0, 0,0,0
-                            , 0,0,0, 0,0,0, 0,0,0
-                            ]
-
-                        actual =
-                            Just (Possible.eliminateUsed puzzle Possible.initialize)
-
-                        allBut2 =
-                            removeAt 1 [1..9]
-
-                        expected =
-                            Possible.initialize
-                                |> set 0 [2]
-
-                                -- remove 2 from row
-                                |> setAll [1..8] allBut2
-
-                                -- remove 2 from column
-                                |> setAll ([1..8] |> List.map ((*) 9)) allBut2
-
-                                -- remove 2 from rest of group
-                                |> setAll [10,11,19,20] allBut2
-
-                                |> Just
-                    in
-                        Expect.equal expected actual
-            , test "should preserve existing eliminations" <|
-                \() ->
-                    let
-                        puzzle =
-                            [ 2,0,0, 0,0,0, 0,0,0
-                            , 0,0,0, 0,0,0, 0,0,0
-                            , 0,0,0, 0,0,0, 0,0,0
-
-                            , 0,0,0, 0,0,0, 0,0,0
-                            , 0,0,0, 0,0,0, 0,0,0
-                            , 0,0,0, 0,0,0, 0,0,0
-
-                            , 0,0,0, 0,0,0, 0,0,0
-                            , 0,0,0, 0,0,0, 0,0,0
-                            , 0,0,0, 0,0,0, 0,0,0
-                            ]
+                            Puzzle.empty
+                                |> set 0 2
 
                         possible =
-                            Possible.initialize
-                                -- let's set the last one to something arbitrary
-                                |> set (9 * 9 - 1) [5,6]
+                            Possible.initialize puzzle
 
                         actual =
-                            Possible.eliminateUsed puzzle possible
+                            Possible.eliminateUsed possible
 
                         allBut2 =
                             removeAt 1 [1..9]
 
                         expected =
                             possible
-                                |> set 0 [2]
-
+                                |> set 0 [ 2 ]
                                 -- remove 2 from row
-                                |> setAll [1..8] allBut2
-
+                                |>
+                                    setAll [1..8] allBut2
                                 -- remove 2 from column
-                                |> setAll ([1..8] |> List.map ((*) 9)) allBut2
-
+                                |>
+                                    setAll ([1..8] |> List.map ((*) 9)) allBut2
                                 -- remove 2 from rest of group
-                                |> setAll [10,11,19,20] allBut2
+                                |>
+                                    setAll [ 10, 11, 19, 20 ] allBut2
+                    in
+                        Expect.equal expected actual
+            , test "should preserve existing eliminations" <|
+                \() ->
+                    let
+                        puzzle =
+                            Puzzle.empty
+                                |> set 0 2
+
+                        possible =
+                            Possible.initialize puzzle
+                                -- let's set the last one to something arbitrary
+                                |>
+                                    set (9 * 9 - 1) [ 5, 6 ]
+
+                        actual =
+                            Possible.eliminateUsed possible
+
+                        allBut2 =
+                            removeAt 1 [1..9]
+
+                        expected =
+                            possible
+                                |> set 0 [ 2 ]
+                                -- remove 2 from row
+                                |>
+                                    setAll [1..8] allBut2
+                                -- remove 2 from column
+                                |>
+                                    setAll ([1..8] |> List.map ((*) 9)) allBut2
+                                -- remove 2 from rest of group
+                                |>
+                                    setAll [ 10, 11, 19, 20 ] allBut2
                     in
                         Expect.equal expected actual
             ]
         ]
 
+
 setAll : List Int -> a -> List a -> List a
 setAll is x xs =
     is |> List.foldl (\i b -> set i x b) xs
+
 
 set : Int -> a -> List a -> List a
 set i x xs =

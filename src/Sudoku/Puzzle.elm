@@ -4,14 +4,11 @@ module Sudoku.Puzzle
         , empty
         , fromList
         , Error(..)
-        , rows
-        , columns
-        , groups
         , solved
         )
 
-import List.Extra exposing (groupsOf, transpose, getAt, removeAt)
 import Set
+import Sudoku.Grid exposing (rows, columns, groups)
 
 
 type alias Puzzle =
@@ -37,35 +34,6 @@ fromList xs =
         Err OutOfRange
     else
         Ok xs
-
-
-rows : Puzzle -> List (List Int)
-rows =
-    groupsOf 9
-
-
-columns : Puzzle -> List (List Int)
-columns =
-    rows >> transpose
-
-
-groups : Puzzle -> List (List Int)
-groups =
-    -- separate rows into 3 sections
-    rows
-        >> groupsOf 3
-        -- chop sections into parts
-        >>
-            List.concatMap transpose
-        -- group parts to make sudoku groups
-        >>
-            groupsOf 3
-        -- restore original left-right/top-bottom orientation within group
-        >>
-            List.map transpose
-        -- finally combine 3 value parts
-        >>
-            List.map List.concat
 
 
 solved : Puzzle -> Bool

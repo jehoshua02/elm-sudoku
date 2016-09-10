@@ -6,12 +6,14 @@ import Test exposing (..)
 
 import Sudoku.PuzzleTests
 import Sudoku.PossibleTests
+import Sudoku.GridTests
 
 
 tests : Test
 tests =
     describe "Sudoku"
-        [ Sudoku.PuzzleTests.tests
+        [ Sudoku.GridTests.tests
+        , Sudoku.PuzzleTests.tests
         , Sudoku.PossibleTests.tests
         ]
 

@@ -6,7 +6,8 @@ module Sudoku.Possible
         )
 
 import Set
-import Sudoku.Puzzle exposing (Puzzle, rows, columns, groups)
+import Sudoku.Puzzle exposing (Puzzle, empty)
+import Sudoku.Grid exposing (rows, columns, groups)
 import List.Extra exposing (getAt, removeAt, unique)
 
 
@@ -14,38 +15,57 @@ type alias Possible =
     List (List Int)
 
 
-initialize : Possible
-initialize =
-    List.repeat (9 * 9) [1..9]
-
-
-eliminateUsed : Puzzle -> Possible -> Possible
-eliminateUsed puzzle possible =
-    puzzle |> List.indexedMap
-        (\i v ->
-            if v /= 0 then
-                [v]
+toPuzzle : Possible -> Puzzle
+toPuzzle =
+    List.map
+        (\xs ->
+            if List.length xs == 1 then
+                get 0 0 xs
             else
-                possible
-                    |> getAt i
-                    |> Maybe.withDefault []
-                    |> Set.fromList
-                    |> flip Set.diff (Set.fromList (used i puzzle))
-                    |> Set.toList
+                0
         )
+
+
+initialize : Puzzle -> Possible
+initialize puzzle =
+    puzzle
+        |> List.map
+            (\x ->
+                if x == 0 then
+                    [1..9]
+                else
+                    [ x ]
+            )
+
+
+eliminateUsed : Possible -> Possible
+eliminateUsed possible =
+    let
+        puzzle =
+            toPuzzle possible
+    in
+        possible
+            |> List.indexedMap
+                (\i xs ->
+                    possible
+                        |> get i []
+                        |> Set.fromList
+                        |> flip Set.diff (Set.fromList (used i puzzle))
+                        |> Set.toList
+                )
 
 
 used : Int -> Puzzle -> List Int
 used i puzzle =
     let
-        (x, y) =
-            (i % 9, i // 9)
+        ( x, y ) =
+            ( i % 9, i // 9 )
 
         row =
-            getAt x (rows puzzle) |> Maybe.map (removeAt y)
+            get x [] (rows puzzle) |> removeAt y
 
         column =
-            getAt y (columns puzzle) |> Maybe.map (removeAt x)
+            get y [] (columns puzzle) |> removeAt x
 
         group =
             let
@@ -57,9 +77,11 @@ used i puzzle =
                     -- index within group
                     (x % 3) // 3 + (y % 3) * 3
             in
-                getAt g (groups puzzle) |> Maybe.map (removeAt i)
+                get g [] (groups puzzle) |> removeAt i
     in
-        Maybe.map3 (\a b c -> a ++ b ++ c) row column group
-            |> Maybe.withDefault []
-            |> List.filter ((/=) 0)
-            |> unique
+        row ++ column ++ group |> unique
+
+
+get : Int -> a -> List a -> a
+get i d xs =
+    getAt i xs |> Maybe.withDefault d
