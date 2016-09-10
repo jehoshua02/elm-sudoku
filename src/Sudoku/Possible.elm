@@ -3,14 +3,15 @@ module Sudoku.Possible
         ( Possible
         , initialize
         , toPuzzle
+        , eliminate
         , eliminateUsed
         , eliminateCrowds
         )
 
 import Set
-import Sudoku.Puzzle exposing (Puzzle, empty)
+import Sudoku.Puzzle exposing (Puzzle)
 import Sudoku.Grid exposing (rows, columns, groups)
-import List.Extra exposing (getAt, removeAt, unique)
+import List.Extra exposing (getAt, removeAt, updateAt, unique)
 
 
 type alias Possible =
@@ -38,6 +39,19 @@ toPuzzle =
             else
                 0
         )
+
+
+eliminate : List Int -> List Int -> Possible -> Possible
+eliminate xs is possible =
+    case is of
+        [] ->
+            possible
+
+        i :: is ->
+            possible
+                |> updateAt i (flip diff xs)
+                |> Maybe.withDefault possible
+                |> eliminate xs is
 
 
 eliminateUsed : Possible -> Possible
@@ -92,3 +106,8 @@ eliminateCrowds possible =
 get : Int -> a -> List a -> a
 get i d xs =
     getAt i xs |> Maybe.withDefault d
+
+
+diff : List comparable -> List comparable -> List comparable
+diff a b =
+    Set.diff (Set.fromList a) (Set.fromList b) |> Set.toList

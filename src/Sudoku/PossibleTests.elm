@@ -56,6 +56,22 @@ tests =
                     in
                         Expect.equal expected actual
             ]
+        , describe "eliminate"
+            [ test "should eliminate number from a specific location" <|
+                \() ->
+                    let
+                        possible =
+                            Possible.initialize Puzzle.empty
+
+                        actual =
+                            Possible.eliminate [5] [0] possible
+
+                        expected =
+                            possible
+                                |> set 0 [ 1, 2, 3, 4, 6, 7, 8, 9 ]
+                    in
+                        Expect.equal expected actual
+            ]
         , describe "eliminateUsed"
             [ test "should eliminate nothing" <|
                 \() ->
