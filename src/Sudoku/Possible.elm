@@ -4,7 +4,7 @@ module Sudoku.Possible
         , initialize
         , toPuzzle
         , eliminateUsed
-        , eliminateCrowd
+        , eliminateCrowds
         )
 
 import Set
@@ -84,8 +84,8 @@ used i puzzle =
         row ++ column ++ group |> unique
 
 
-eliminateCrowd : Possible -> Possible
-eliminateCrowd possible =
+eliminateCrowds : Possible -> Possible
+eliminateCrowds possible =
     possible
 
 
