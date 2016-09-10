@@ -4,6 +4,7 @@ module Sudoku.Possible
         , initialize
         , toPuzzle
         , eliminateUsed
+        , eliminateCrowd
         )
 
 import Set
@@ -81,6 +82,11 @@ used i puzzle =
                 get g [] (groups puzzle) |> removeAt i
     in
         row ++ column ++ group |> unique
+
+
+eliminateCrowd : Possible -> Possible
+eliminateCrowd possible =
+    possible
 
 
 get : Int -> a -> List a -> a

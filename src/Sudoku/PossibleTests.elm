@@ -131,6 +131,23 @@ tests =
                     in
                         Expect.equal expected actual
             ]
+        , describe "eliminateCrowd"
+            [ test "should eliminate nothing" <|
+                \() ->
+                    let
+                        possible =
+                            Possible.initialize Puzzle.empty
+
+                        actual =
+                            Possible.eliminateCrowd possible
+
+                        expected =
+                            possible
+                    in
+                        Expect.equal expected actual
+            --, test "should eliminate crowds"
+            --, test "should preserve existing eliminations"
+            ]
         ]
 
 
