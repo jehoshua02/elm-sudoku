@@ -10,6 +10,9 @@
 
 # TODO
 
++ cleanup
+  + use eliminate instead of set/setAll
+  + try to get rid of private helper functions
 + Possible.eliminateSame
   + n locations, same n possibilities, live in same row/column/group
   + eliminate those possibilities in row/column/group

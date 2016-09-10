@@ -2,7 +2,7 @@ port module Sudoku.PossibleTests exposing (..)
 
 import Test exposing (..)
 import Expect
-import Sudoku.Possible as Possible
+import Sudoku.Possible as Possible exposing (eliminate)
 import Sudoku.Puzzle as Puzzle
 import List.Extra exposing (setAt, removeAt)
 
@@ -161,7 +161,30 @@ tests =
                             possible
                     in
                         Expect.equal expected actual
-            --, test "should eliminate crowds"
+            , test "should eliminate crowds" <|
+                \() ->
+                    let
+                        possible =
+                            Possible.initialize Puzzle.empty
+                                -- eliminate 7 in a row, except for one
+                                |> eliminate [7] [1..8]
+
+                                -- eliminate 2 in column, except for one
+                                |> eliminate [2] [ 10, 19, 28, 37, 46, 55, 64, 73 ]
+
+                                -- eliminate 5 in group, except for one
+                                |> eliminate [5] [ 0, 1, 9, 10, 11, 18, 19, 20 ]
+
+                        actual =
+                            Possible.eliminateCrowds possible
+
+                        expected =
+                            possible
+                                |> set 0 [7]
+                                |> set 1 [2]
+                                |> set 2 [5]
+                    in
+                        Expect.equal expected actual
             --, test "should preserve existing eliminations"
             ]
         ]
