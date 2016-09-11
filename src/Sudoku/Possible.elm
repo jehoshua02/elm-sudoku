@@ -122,22 +122,25 @@ eliminateCrowds possible =
 
 eliminateCrowds' : (Possible -> List (List (List Int))) -> (Int -> Int -> Int) -> Possible -> Possible
 eliminateCrowds' chunks index possible =
-    [1..9] |> flip List.foldl possible
-        (\n p ->
-            chunks p
-                |> List.indexedMap
-                    (\c chunk ->
-                        chunk
-                            |> findIndices (List.member n)
-                            |> List.map (index c)
-                    )
-                |> List.filter (\xs -> List.length xs == 1)
-                |> List.concat
-                |> flip List.foldl p
-                    (\i p ->
-                        setAt i [n] p |> Maybe.withDefault p
-                    )
-        )
+    [1..9]
+        |> flip List.foldl
+            possible
+            (\n p ->
+                chunks p
+                    |> List.indexedMap
+                        (\c chunk ->
+                            chunk
+                                |> findIndices (List.member n)
+                                |> List.map (index c)
+                        )
+                    |> List.filter (\xs -> List.length xs == 1)
+                    |> List.concat
+                    |> flip List.foldl
+                        p
+                        (\i p ->
+                            setAt i [ n ] p |> Maybe.withDefault p
+                        )
+            )
 
 
 get : Int -> a -> List a -> a

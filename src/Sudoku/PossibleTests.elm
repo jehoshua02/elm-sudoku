@@ -16,8 +16,8 @@ tests =
                     let
                         possible =
                             List.repeat (9 * 9) [1..9]
-                                |> set 0 [2]
-                                |> set 10 [7]
+                                |> set 0 [ 2 ]
+                                |> set 10 [ 7 ]
 
                         actual =
                             Possible.toPuzzle possible
@@ -64,7 +64,7 @@ tests =
                             Possible.initialize Puzzle.empty
 
                         actual =
-                            Possible.eliminate [5] [0] possible
+                            Possible.eliminate [ 5 ] [ 0 ] possible
 
                         expected =
                             possible
@@ -99,9 +99,9 @@ tests =
                         expected =
                             possible
                                 |> set 0 [ 2 ]
-                                |> eliminate [2] [1..8]
-                                |> eliminate [2] ([1..8] |> List.map ((*) 9))
-                                |> eliminate [2] [ 10, 11, 19, 20 ]
+                                |> eliminate [ 2 ] [1..8]
+                                |> eliminate [ 2 ] ([1..8] |> List.map ((*) 9))
+                                |> eliminate [ 2 ] [ 10, 11, 19, 20 ]
                     in
                         Expect.equal expected actual
             , test "should preserve existing eliminations" <|
@@ -123,9 +123,9 @@ tests =
                         expected =
                             possible
                                 |> set 0 [ 2 ]
-                                |> eliminate [2] [1..8]
-                                |> eliminate [2] ([1..8] |> List.map ((*) 9))
-                                |> eliminate [2] [ 10, 11, 19, 20 ]
+                                |> eliminate [ 2 ] [1..8]
+                                |> eliminate [ 2 ] ([1..8] |> List.map ((*) 9))
+                                |> eliminate [ 2 ] [ 10, 11, 19, 20 ]
                     in
                         Expect.equal expected actual
             ]
@@ -149,22 +149,23 @@ tests =
                         possible =
                             Possible.initialize Puzzle.empty
                                 -- eliminate 7 in a row, except for one
-                                |> eliminate [7] [1..8]
-
+                                |>
+                                    eliminate [ 7 ] [1..8]
                                 -- eliminate 2 in column, except for one
-                                |> eliminate [2] [ 10, 19, 28, 37, 46, 55, 64, 73 ]
-
+                                |>
+                                    eliminate [ 2 ] [ 10, 19, 28, 37, 46, 55, 64, 73 ]
                                 -- eliminate 5 in group, except for one
-                                |> eliminate [5] [ 0, 1, 9, 10, 11, 18, 19, 20 ]
+                                |>
+                                    eliminate [ 5 ] [ 0, 1, 9, 10, 11, 18, 19, 20 ]
 
                         actual =
                             Possible.eliminateCrowds possible
 
                         expected =
                             possible
-                                |> set 0 [7]
-                                |> set 1 [2]
-                                |> set 2 [5]
+                                |> set 0 [ 7 ]
+                                |> set 1 [ 2 ]
+                                |> set 2 [ 5 ]
                     in
                         Expect.equal expected actual
             ]

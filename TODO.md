@@ -6,10 +6,6 @@
 # TODOING
 
 + cleanup
-  + unused imports/exports
-  + duplication
-  + complexity
-  + eliminate elm-format headaches
   + try to get rid of private helper functions
 
 # TODO
@@ -29,3 +25,4 @@
 + Puzzle.make
 + adhere to elm-package requirements/conventions (as an exercise, not necessarily to publish)
 + alternate puzzle sizes
++ Run elm-format validate in travis
