@@ -6,6 +6,7 @@ module Sudoku.Possible
         , eliminate
         , eliminateUsed
         , eliminateCrowds
+        , eliminateSame
         )
 
 import Set
@@ -142,3 +143,8 @@ eliminateCrowds' chunks index possible =
                             set i [ n ] p
                         )
             )
+
+
+eliminateSame : Possible -> Possible
+eliminateSame possible =
+    possible

@@ -169,4 +169,20 @@ tests =
                     in
                         Expect.equal expected actual
             ]
+        , describe "eliminateSame"
+            [ test "should eliminate nothing" <|
+                \() ->
+                    let
+                        possible =
+                            Possible.initialize Puzzle.empty
+
+                        actual =
+                            Possible.eliminateSame possible
+
+                        expected =
+                            possible
+                    in
+                        Expect.equal expected actual
+            --, test "should eliminate same possibilities" <|
+            ]
         ]
