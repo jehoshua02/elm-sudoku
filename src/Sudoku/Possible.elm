@@ -11,7 +11,8 @@ module Sudoku.Possible
 import Set
 import Sudoku.Puzzle exposing (Puzzle)
 import Sudoku.Grid exposing (rows, columns, groups)
-import List.Extra exposing (getAt, removeAt, updateAt, unique, setAt, findIndices)
+import List.Extra exposing (removeAt, updateAt, unique, findIndices)
+import Util exposing (get, diff, set)
 
 
 type alias Possible =
@@ -138,16 +139,6 @@ eliminateCrowds' chunks index possible =
                     |> flip List.foldl
                         p
                         (\i p ->
-                            setAt i [ n ] p |> Maybe.withDefault p
+                            set i [ n ] p
                         )
             )
-
-
-get : Int -> a -> List a -> a
-get i d xs =
-    getAt i xs |> Maybe.withDefault d
-
-
-diff : List comparable -> List comparable -> List comparable
-diff a b =
-    Set.diff (Set.fromList a) (Set.fromList b) |> Set.toList

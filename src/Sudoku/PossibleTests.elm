@@ -4,7 +4,7 @@ import Test exposing (..)
 import Expect
 import Sudoku.Possible as Possible exposing (eliminate)
 import Sudoku.Puzzle as Puzzle
-import List.Extra exposing (setAt)
+import Util exposing (set)
 
 
 tests : Test
@@ -170,8 +170,3 @@ tests =
                         Expect.equal expected actual
             ]
         ]
-
-
-set : Int -> a -> List a -> List a
-set i x xs =
-    setAt i x xs |> Maybe.withDefault xs
