@@ -6,10 +6,11 @@
 # TODOING
 
 + cleanup
-  + try to get rid of private helper functions
   + unused imports/exports
   + duplication
   + complexity
+  + eliminate elm-format headaches
+  + try to get rid of private helper functions
 
 # TODO
 

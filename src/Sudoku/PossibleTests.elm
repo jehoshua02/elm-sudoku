@@ -1,10 +1,10 @@
-port module Sudoku.PossibleTests exposing (..)
+port module Sudoku.PossibleTests exposing (tests)
 
 import Test exposing (..)
 import Expect
 import Sudoku.Possible as Possible exposing (eliminate)
 import Sudoku.Puzzle as Puzzle
-import List.Extra exposing (setAt, removeAt)
+import List.Extra exposing (setAt)
 
 
 tests : Test

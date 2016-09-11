@@ -1,4 +1,4 @@
-port module Sudoku.GridTests exposing (..)
+port module Sudoku.GridTests exposing (tests)
 
 import Test exposing (..)
 import Expect

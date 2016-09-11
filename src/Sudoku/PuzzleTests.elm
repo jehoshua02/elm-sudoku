@@ -1,4 +1,4 @@
-port module Sudoku.PuzzleTests exposing (..)
+port module Sudoku.PuzzleTests exposing (tests)
 
 import Test exposing (..)
 import Expect
