@@ -11,7 +11,7 @@ module Sudoku.Possible
 import Set
 import Sudoku.Puzzle exposing (Puzzle)
 import Sudoku.Grid exposing (rows, columns, groups)
-import List.Extra exposing (getAt, removeAt, updateAt, unique)
+import List.Extra exposing (getAt, removeAt, updateAt, unique, setAt, findIndices)
 
 
 type alias Possible =
@@ -101,6 +101,79 @@ used i puzzle =
 eliminateCrowds : Possible -> Possible
 eliminateCrowds possible =
     possible
+        |> eliminateCrowdsInRows
+        |> eliminateCrowdsInColumns
+        |> eliminateCrowdsInGroups
+
+
+eliminateCrowdsInRows : Possible -> Possible
+eliminateCrowdsInRows possible =
+    [1..9] |> flip List.foldl possible
+        (\n p ->
+            rows p
+                |> List.indexedMap
+                    (\y row ->
+                        row
+                            |> findIndices (List.member n)
+                            |> List.map (\x -> x + y * 9)
+                    )
+                |> List.filter (\xs -> List.length xs == 1)
+                |> List.concat
+                |> flip List.foldl p
+                    (\i p ->
+                        setAt i [n] p |> Maybe.withDefault p
+                    )
+        )
+
+
+eliminateCrowdsInColumns : Possible -> Possible
+eliminateCrowdsInColumns possible =
+    [1..9] |> flip List.foldl possible
+        (\n p ->
+            columns p
+                |> List.indexedMap
+                    (\x column ->
+                        column
+                            |> findIndices (List.member n)
+                            |> List.map (\y -> x + y * 9)
+                    )
+                |> List.filter (\xs -> List.length xs == 1)
+                |> List.concat
+                |> flip List.foldl p
+                    (\i p ->
+                        setAt i [n] p |> Maybe.withDefault p
+                    )
+        )
+
+
+eliminateCrowdsInGroups : Possible -> Possible
+eliminateCrowdsInGroups possible =
+    [1..9] |> flip List.foldl possible
+        (\n p ->
+            groups p
+                |> List.indexedMap
+                    (\g group ->
+                        group
+                            |> findIndices (List.member n)
+                            |> List.map
+                                (\i ->
+                                    let
+                                        x =
+                                            i % 3 + g % 3 * 3
+
+                                        y =
+                                            i // 3 + g // 3 * 3
+                                    in
+                                        x + y * 9
+                                )
+                    )
+                |> List.filter (\xs -> List.length xs == 1)
+                |> List.concat
+                |> flip List.foldl p
+                    (\i p ->
+                        setAt i [n] p |> Maybe.withDefault p
+                    )
+        )
 
 
 get : Int -> a -> List a -> a

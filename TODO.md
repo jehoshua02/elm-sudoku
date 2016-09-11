@@ -1,18 +1,19 @@
 # TODONE
 
 + Possible.eliminateUsed
++ Possible.eliminateCrowd
 
 # TODOING
-
-+ Possible.eliminateCrowd
-  + number only possible in one location in row/column/group
-  + but the "crowd" in that location hasn't been eliminated by other techniques
-
-# TODO
 
 + cleanup
   + use eliminate instead of set/setAll
   + try to get rid of private helper functions
+  + unused imports/exports
+  + duplication
+  + complexity
+
+# TODO
+
 + Possible.eliminateSame
   + n locations, same n possibilities, live in same row/column/group
   + eliminate those possibilities in row/column/group

@@ -185,7 +185,6 @@ tests =
                                 |> set 2 [5]
                     in
                         Expect.equal expected actual
-            --, test "should preserve existing eliminations"
             ]
         ]
 
