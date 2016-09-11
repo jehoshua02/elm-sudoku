@@ -100,72 +100,36 @@ used i puzzle =
 
 eliminateCrowds : Possible -> Possible
 eliminateCrowds possible =
-    possible
-        |> eliminateCrowdsInRows
-        |> eliminateCrowdsInColumns
-        |> eliminateCrowdsInGroups
+    let
+        coordToIndex =
+            (\x y -> x + y * 9)
+    in
+        possible
+            |> eliminateCrowds' rows coordToIndex
+            |> eliminateCrowds' columns coordToIndex
+            |> eliminateCrowds' groups
+                (\g i ->
+                    let
+                        x =
+                            (i % 3) + (g % 3) * 3
+
+                        y =
+                            (i // 3) + (g // 3) * 3
+                    in
+                        coordToIndex x y
+                )
 
 
-eliminateCrowdsInRows : Possible -> Possible
-eliminateCrowdsInRows possible =
+eliminateCrowds' : (Possible -> List (List (List Int))) -> (Int -> Int -> Int) -> Possible -> Possible
+eliminateCrowds' chunks index possible =
     [1..9] |> flip List.foldl possible
         (\n p ->
-            rows p
+            chunks p
                 |> List.indexedMap
-                    (\y row ->
-                        row
+                    (\c chunk ->
+                        chunk
                             |> findIndices (List.member n)
-                            |> List.map (\x -> x + y * 9)
-                    )
-                |> List.filter (\xs -> List.length xs == 1)
-                |> List.concat
-                |> flip List.foldl p
-                    (\i p ->
-                        setAt i [n] p |> Maybe.withDefault p
-                    )
-        )
-
-
-eliminateCrowdsInColumns : Possible -> Possible
-eliminateCrowdsInColumns possible =
-    [1..9] |> flip List.foldl possible
-        (\n p ->
-            columns p
-                |> List.indexedMap
-                    (\x column ->
-                        column
-                            |> findIndices (List.member n)
-                            |> List.map (\y -> x + y * 9)
-                    )
-                |> List.filter (\xs -> List.length xs == 1)
-                |> List.concat
-                |> flip List.foldl p
-                    (\i p ->
-                        setAt i [n] p |> Maybe.withDefault p
-                    )
-        )
-
-
-eliminateCrowdsInGroups : Possible -> Possible
-eliminateCrowdsInGroups possible =
-    [1..9] |> flip List.foldl possible
-        (\n p ->
-            groups p
-                |> List.indexedMap
-                    (\g group ->
-                        group
-                            |> findIndices (List.member n)
-                            |> List.map
-                                (\i ->
-                                    let
-                                        x =
-                                            i % 3 + g % 3 * 3
-
-                                        y =
-                                            i // 3 + g // 3 * 3
-                                    in
-                                        x + y * 9
-                                )
+                            |> List.map (index c)
                     )
                 |> List.filter (\xs -> List.length xs == 1)
                 |> List.concat
