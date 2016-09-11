@@ -5,15 +5,13 @@
 
 # TODOING
 
-+ cleanup
-  + try to get rid of private helper functions
-
-# TODO
-
 + Possible.eliminateSame
   + n locations, same n possibilities, live in same row/column/group
   + eliminate those possibilities in row/column/group
   + need to check all groups, rows, columns independently
+
+# TODO
+
 + Possible.eliminateAligned
   + within a group, all possibilities for a value exist in same row/column
   + eliminate possibility for that number in other groups sharing row/column
