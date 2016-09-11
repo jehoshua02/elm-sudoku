@@ -1,12 +1,11 @@
 # TODONE
 
 + Possible.eliminateUsed
-+ Possible.eliminateCrowd
++ Possible.eliminateCrowds
 
 # TODOING
 
 + cleanup
-  + use eliminate instead of set/setAll
   + try to get rid of private helper functions
   + unused imports/exports
   + duplication

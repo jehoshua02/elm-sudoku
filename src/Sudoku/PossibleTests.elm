@@ -96,21 +96,12 @@ tests =
                         actual =
                             Possible.eliminateUsed possible
 
-                        allBut2 =
-                            removeAt 1 [1..9]
-
                         expected =
                             possible
                                 |> set 0 [ 2 ]
-                                -- remove 2 from row
-                                |>
-                                    setAll [1..8] allBut2
-                                -- remove 2 from column
-                                |>
-                                    setAll ([1..8] |> List.map ((*) 9)) allBut2
-                                -- remove 2 from rest of group
-                                |>
-                                    setAll [ 10, 11, 19, 20 ] allBut2
+                                |> eliminate [2] [1..8]
+                                |> eliminate [2] ([1..8] |> List.map ((*) 9))
+                                |> eliminate [2] [ 10, 11, 19, 20 ]
                     in
                         Expect.equal expected actual
             , test "should preserve existing eliminations" <|
@@ -129,21 +120,12 @@ tests =
                         actual =
                             Possible.eliminateUsed possible
 
-                        allBut2 =
-                            removeAt 1 [1..9]
-
                         expected =
                             possible
                                 |> set 0 [ 2 ]
-                                -- remove 2 from row
-                                |>
-                                    setAll [1..8] allBut2
-                                -- remove 2 from column
-                                |>
-                                    setAll ([1..8] |> List.map ((*) 9)) allBut2
-                                -- remove 2 from rest of group
-                                |>
-                                    setAll [ 10, 11, 19, 20 ] allBut2
+                                |> eliminate [2] [1..8]
+                                |> eliminate [2] ([1..8] |> List.map ((*) 9))
+                                |> eliminate [2] [ 10, 11, 19, 20 ]
                     in
                         Expect.equal expected actual
             ]
@@ -187,11 +169,6 @@ tests =
                         Expect.equal expected actual
             ]
         ]
-
-
-setAll : List Int -> a -> List a -> List a
-setAll is x xs =
-    is |> List.foldl (\i b -> set i x b) xs
 
 
 set : Int -> a -> List a -> List a
