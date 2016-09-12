@@ -149,8 +149,11 @@ eliminateSame' chunks index possible =
                     |> List.filterMap
                         (\xs ->
                             let
-                                limit = List.length chunk
-                                is = elemIndices xs chunk
+                                limit =
+                                    List.length chunk
+
+                                is =
+                                    elemIndices xs chunk
                             in
                                 if List.length xs == limit then
                                     Nothing
@@ -167,10 +170,9 @@ eliminateSame' chunks index possible =
                         )
             )
         |> List.concat
-        |> flip List.foldl possible
-            (\{xs, is} possible ->
-                eliminate xs is possible
-            )
+        |> flip List.foldl
+            possible
+            (\{ xs, is } possible -> eliminate xs is possible)
 
 
 coordToIndex : Int -> Int -> Int

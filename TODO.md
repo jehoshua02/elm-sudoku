@@ -2,10 +2,11 @@
 
 + Possible.eliminateUsed
 + Possible.eliminateCrowds
-+ Possible.eliminateSame
 
 # TODOING
 
++ Possible.eliminateSame
+  + code format + merge
 + Possible.eliminateAligned
   + within a group, all possibilities for a value exist in same row/column
   + eliminate possibility for that number in other groups sharing row/column
