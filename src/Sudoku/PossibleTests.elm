@@ -183,6 +183,35 @@ tests =
                             possible
                     in
                         Expect.equal expected actual
-            --, test "should eliminate same possibilities" <|
+            , test "should eliminate same possibilities" <|
+                \() ->
+                    let
+                        possible =
+                            Possible.initialize Puzzle.empty
+                                -- row, size 2
+                                |> set 3 [ 1, 2 ]
+                                |> set 8 [ 1, 2 ]
+
+                                -- group size 3
+                                |> set 60 [ 3, 4, 5 ]
+                                |> set 70 [ 3, 4, 5 ]
+                                |> set 80 [ 3, 4, 5 ]
+
+                                -- column, size 4
+                                |> set 0 [ 6, 7, 8, 9 ]
+                                |> set 9 [ 6, 7, 8, 9 ]
+                                |> set 18 [ 6, 7, 8, 9 ]
+                                |> set 27 [ 6, 7, 8, 9 ]
+
+                        actual =
+                            Possible.eliminateSame possible
+
+                        expected =
+                            possible
+                                |> eliminate [ 1, 2 ] [ 0, 1, 2, 4, 5, 6, 7 ]
+                                |> eliminate [ 3, 4, 5 ] [ 61, 62, 69, 71, 78, 79 ]
+                                |> eliminate [ 6, 7, 8, 9 ] [ 36, 45, 54, 63, 72 ]
+                    in
+                        Expect.equal expected actual
             ]
         ]
