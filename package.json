@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "description": "A sudoku programming exercise implemented in elm",
   "scripts": {
-    "test": "elm-test"
+    "postinstall": "./bin/install-elm-format",
+    "test": "npm run format -- --validate && elm-test",
+    "format": "./bin/elm-format --yes ./src/**/*.elm"
   },
   "repository": {
     "type": "git",
