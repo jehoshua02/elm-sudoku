@@ -6,12 +6,13 @@ module Sudoku.Possible
         , eliminate
         , eliminateUsed
         , eliminateCrowds
+        , eliminateSame
         )
 
 import Set
 import Sudoku.Puzzle exposing (Puzzle)
 import Sudoku.Grid exposing (rows, columns, groups)
-import List.Extra exposing (removeAt, updateAt, unique, findIndices)
+import List.Extra exposing (removeAt, updateAt, unique, findIndices, elemIndices)
 import Util exposing (get, diff, set)
 
 
@@ -101,24 +102,10 @@ used i puzzle =
 
 eliminateCrowds : Possible -> Possible
 eliminateCrowds possible =
-    let
-        coordToIndex =
-            (\x y -> x + y * 9)
-    in
-        possible
-            |> eliminateCrowds' rows coordToIndex
-            |> eliminateCrowds' columns coordToIndex
-            |> eliminateCrowds' groups
-                (\g i ->
-                    let
-                        x =
-                            (i % 3) + (g % 3) * 3
-
-                        y =
-                            (i // 3) + (g // 3) * 3
-                    in
-                        coordToIndex x y
-                )
+    possible
+        |> eliminateCrowds' rows coordToIndex
+        |> eliminateCrowds' columns coordToIndex
+        |> eliminateCrowds' groups groupToIndex
 
 
 eliminateCrowds' : (Possible -> List (List (List Int))) -> (Int -> Int -> Int) -> Possible -> Possible
@@ -142,3 +129,64 @@ eliminateCrowds' chunks index possible =
                             set i [ n ] p
                         )
             )
+
+
+eliminateSame : Possible -> Possible
+eliminateSame possible =
+    possible
+        |> eliminateSame' rows (flip coordToIndex)
+        |> eliminateSame' columns coordToIndex
+        |> eliminateSame' groups groupToIndex
+
+
+eliminateSame' : (Possible -> List (List (List Int))) -> (Int -> Int -> Int) -> Possible -> Possible
+eliminateSame' chunks index possible =
+    chunks possible
+        |> List.indexedMap
+            (\c chunk ->
+                chunk
+                    |> unique
+                    |> List.filterMap
+                        (\xs ->
+                            let
+                                limit =
+                                    List.length chunk
+
+                                is =
+                                    elemIndices xs chunk
+                            in
+                                if List.length xs == limit then
+                                    Nothing
+                                else if List.length xs /= List.length is then
+                                    Nothing
+                                else
+                                    Just
+                                        { xs = xs
+                                        , is =
+                                            is
+                                                |> diff [0..(limit - 1)]
+                                                |> List.map (index c)
+                                        }
+                        )
+            )
+        |> List.concat
+        |> flip List.foldl
+            possible
+            (\{ xs, is } possible -> eliminate xs is possible)
+
+
+coordToIndex : Int -> Int -> Int
+coordToIndex x y =
+    x + y * 9
+
+
+groupToIndex : Int -> Int -> Int
+groupToIndex g i =
+    let
+        x =
+            (i % 3) + (g % 3) * 3
+
+        y =
+            (i // 3) + (g // 3) * 3
+    in
+        coordToIndex x y
