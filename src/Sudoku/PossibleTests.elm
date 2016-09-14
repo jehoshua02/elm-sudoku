@@ -215,4 +215,46 @@ tests =
                     in
                         Expect.equal expected actual
             ]
+        , describe "eliminateAligned"
+            [ test "should eliminate nothing" <|
+                \() ->
+                    let
+                        possible =
+                            Possible.initialize Puzzle.empty
+
+                        actual =
+                            Possible.eliminateAligned possible
+
+                        expected =
+                            possible
+                    in
+                        Expect.equal expected actual
+            , test "should eliminate aligned possibilities" <|
+                \() ->
+                    let
+                        possible =
+                            Possible.initialize Puzzle.empty
+                                -- first row, first column in first group
+                                |>
+                                    eliminate [ 3 ] [ 9, 10, 11, 18, 19, 20 ]
+                                |> eliminate [ 4 ] [ 1, 10, 19, 2, 11, 20 ]
+                                -- second row in second group
+                                |>
+                                    eliminate [ 5 ] [ 3, 4, 5, 12, 21, 22, 23 ]
+                                -- second column in fourth group
+                                |>
+                                    eliminate [ 6 ] [ 30, 32, 39, 40, 41, 48, 50 ]
+
+                        actual =
+                            Possible.eliminateAligned possible
+
+                        expected =
+                            possible
+                                |> eliminate [ 3 ] [ 3, 4, 5, 6, 7, 8 ]
+                                |> eliminate [ 4 ] [ 27, 36, 45, 54, 63, 72 ]
+                                |> eliminate [ 5 ] [ 9, 10, 11, 15, 16, 17 ]
+                                |> eliminate [ 6 ] [ 4, 13, 22, 58, 67, 76 ]
+                    in
+                        Expect.equal expected actual
+            ]
         ]

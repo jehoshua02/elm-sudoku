@@ -7,6 +7,7 @@ module Sudoku.Possible
         , eliminateUsed
         , eliminateCrowds
         , eliminateSame
+        , eliminateAligned
         )
 
 import Set
@@ -173,6 +174,65 @@ eliminateSame' chunks index possible =
         |> flip List.foldl
             possible
             (\{ xs, is } possible -> eliminate xs is possible)
+
+
+eliminateAligned : Possible -> Possible
+eliminateAligned possible =
+    [1..9]
+        |> flip List.foldl
+            possible
+            (\n possible ->
+                possible
+                    |> groups
+                    |> List.indexedMap
+                        (\g group ->
+                            let
+                                is =
+                                    group
+                                        |> findIndices (List.member n)
+
+                                same =
+                                    unique >> List.length >> (==) 1
+
+                                row =
+                                    (flip (//) 3)
+
+                                column =
+                                    (flip (%) 3)
+                            in
+                                if List.length is == 0 then
+                                    []
+                                else if is |> List.map row |> same then
+                                    let
+                                        y =
+                                            is
+                                                |> List.head
+                                                |> Maybe.withDefault 0
+                                                |> row
+                                    in
+                                        is
+                                            |> List.map ((+) (g // 3))
+                                            |> diff [0..8]
+                                            |> List.map (flip coordToIndex y)
+                                else if is |> List.map column |> same then
+                                    let
+                                        x =
+                                            is
+                                                |> List.head
+                                                |> Maybe.withDefault 0
+                                                |> column
+                                    in
+                                        is
+                                            |> List.map (\i -> i // 3 + g // 3 * 3)
+                                            |> diff [0..8]
+                                            |> List.map (coordToIndex (x + g // 3 * 3))
+                                else
+                                    []
+                        )
+                    |> flip List.foldl
+                        possible
+                        (\is possible -> eliminate [ n ] is possible)
+            )
 
 
 coordToIndex : Int -> Int -> Int
