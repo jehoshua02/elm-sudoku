@@ -5,6 +5,7 @@ module Sudoku.Puzzle
         , fromList
         , Error(..)
         , solved
+        , solve
         )
 
 import Set
@@ -39,3 +40,13 @@ fromList xs =
 solved : Puzzle -> Bool
 solved xs =
     rows xs ++ columns xs ++ groups xs |> List.all (List.sort >> (==) [1..9])
+
+
+solve : Puzzle -> Result Error Puzzle
+solve puzzle =
+    if solved puzzle then
+        Ok puzzle
+    else
+        Err Unsolvable
+
+

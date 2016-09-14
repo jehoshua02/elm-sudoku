@@ -17,6 +17,9 @@
 
 # TODO
 
++ don't mix errors from different methods
+  + fromList: InvalidLength | OutOfRange
+  + solve: Unsolvable
 + Puzzle.make
   + empty puzzle
   + a few random numbers
