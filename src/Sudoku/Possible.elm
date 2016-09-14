@@ -226,7 +226,8 @@ eliminateAligned possible =
                                                 |> (+) (g // 3 * 3)
                                     in
                                         is
-                                            |> List.map (\i -> i // 3 + g // 3 * 3)
+                                            |> List.map
+                                                (\i -> i // 3 + g // 3 * 3)
                                             |> diff [0..8]
                                             |> List.map (coordToIndex x)
                                 else
