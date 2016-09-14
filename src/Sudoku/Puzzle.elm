@@ -48,5 +48,3 @@ solve puzzle =
         Ok puzzle
     else
         Err Unsolvable
-
-
