@@ -244,6 +244,9 @@ tests =
                                 -- second column in fourth group
                                 |>
                                     eliminate [ 6 ] [ 30, 32, 39, 40, 41, 48, 50 ]
+                                -- third row in seventh group
+                                |>
+                                    eliminate [ 7 ] [ 57, 58, 59, 66, 67, 68 ]
 
                         actual =
                             Possible.eliminateAligned possible
@@ -254,6 +257,7 @@ tests =
                                 |> eliminate [ 4 ] [ 27, 36, 45, 54, 63, 72 ]
                                 |> eliminate [ 5 ] [ 9, 10, 11, 15, 16, 17 ]
                                 |> eliminate [ 6 ] [ 4, 13, 22, 58, 67, 76 ]
+                                |> eliminate [ 7 ] [ 72, 73, 74, 78, 79, 80 ]
                     in
                         Expect.equal expected actual
             ]

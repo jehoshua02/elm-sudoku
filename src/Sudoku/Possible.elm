@@ -209,9 +209,11 @@ eliminateAligned possible =
                                                 |> List.head
                                                 |> Maybe.withDefault 0
                                                 |> row
+                                                |> (+) ((g // 3) * 3)
                                     in
                                         is
-                                            |> List.map ((+) (g // 3))
+                                            |> List.map
+                                                (\i -> i % 3 + g % 3 * 3)
                                             |> diff [0..8]
                                             |> List.map (flip coordToIndex y)
                                 else if is |> List.map column |> same then
@@ -221,11 +223,12 @@ eliminateAligned possible =
                                                 |> List.head
                                                 |> Maybe.withDefault 0
                                                 |> column
+                                                |> (+) (g // 3 * 3)
                                     in
                                         is
                                             |> List.map (\i -> i // 3 + g // 3 * 3)
                                             |> diff [0..8]
-                                            |> List.map (coordToIndex (x + g // 3 * 3))
+                                            |> List.map (coordToIndex x)
                                 else
                                     []
                         )
