@@ -9,9 +9,10 @@
 # TODOING
 
 + Puzzle.solve
-  + calculate possible
-  + fill locations with only one possible
-  + if none to fill, need to figure out how to guess and check
+  + return if puzzle solved
+  + eliminate possibilities
+  + if none eliminated, guess and check
+    + unsolvable error if guess and check fails
   + recurse
 
 # TODO
