@@ -17,6 +17,7 @@
 # TODO
 
 + more tests for Puzzle.solve
+  + get a sudoku book or find somewhere online that has puzzles with solutions
 + don't mix errors from different methods
   + fromList: InvalidLength | OutOfRange
   + solve: Unsolvable
