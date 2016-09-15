@@ -8,6 +8,7 @@
 
 # TODOING
 
++ Possible.eliminateUsed
 + Puzzle.solve
   + return if puzzle solved
   + eliminate possibilities

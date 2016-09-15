@@ -40,7 +40,10 @@ tests =
                     Expect.equal True (Puzzle.solved solvedPuzzle)
             ]
         , describe "solve"
-            [ test "should say complete puzzle with error is unsolvable" <|
+            [ test "should say this puzzle is already solved" <|
+                \() ->
+                    Expect.equal (Ok solvedPuzzle) (Puzzle.solve solvedPuzzle)
+            , test "should say complete puzzle with error is unsolvable" <|
                 \() ->
                     let
                         puzzle =
@@ -56,16 +59,13 @@ tests =
                                 |> set 1 5
                     in
                         Expect.equal (Err Unsolvable) (Puzzle.solve puzzle)
-            , test "should say this puzzle is already solved" <|
+            , test "should solve valid, almost complete puzzle" <|
                 \() ->
-                    Expect.equal (Ok solvedPuzzle) (Puzzle.solve solvedPuzzle)
-              --, test "should solve valid, almost complete puzzle" <|
-              --    \() ->
-              --        let
-              --            puzzle =
-              --                solvedPuzzle |> set 0 0
-              --        in
-              --            Expect.equal (Ok solvedPuzzle) (Puzzle.solve puzzle)
+                    let
+                        puzzle =
+                            solvedPuzzle |> set 0 0
+                    in
+                        Expect.equal (Ok solvedPuzzle) (Puzzle.solve puzzle)
             ]
         ]
 

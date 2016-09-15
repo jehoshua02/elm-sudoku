@@ -11,10 +11,13 @@ module Sudoku.Possible
         )
 
 import Set
-import Sudoku.Puzzle exposing (Puzzle)
 import Sudoku.Grid exposing (rows, columns, groups)
 import List.Extra exposing (removeAt, updateAt, unique, findIndices, elemIndices)
-import Util exposing (get, diff, set)
+import Util exposing (get, set, diff)
+
+
+type alias Puzzle =
+    List Int
 
 
 type alias Possible =
@@ -34,14 +37,16 @@ initialize puzzle =
 
 
 toPuzzle : Possible -> Puzzle
-toPuzzle =
-    List.map
-        (\xs ->
-            if List.length xs == 1 then
-                get 0 0 xs
-            else
-                0
-        )
+toPuzzle possible =
+    possible
+        |> List.map
+            (\xs ->
+                case xs of
+                    [ n ] ->
+                        n
+                    _ ->
+                        0
+            )
 
 
 eliminate : List Int -> List Int -> Possible -> Possible
@@ -68,9 +73,7 @@ eliminateUsed possible =
                 (\i xs ->
                     possible
                         |> get i []
-                        |> Set.fromList
-                        |> flip Set.diff (Set.fromList (used i puzzle))
-                        |> Set.toList
+                        |> flip diff (used i puzzle)
                 )
 
 
@@ -81,10 +84,10 @@ used i puzzle =
             ( i % 9, i // 9 )
 
         row =
-            get x [] (rows puzzle) |> removeAt y
+            get y [] (rows puzzle) |> removeAt x
 
         column =
-            get y [] (columns puzzle) |> removeAt x
+            get x [] (columns puzzle) |> removeAt y
 
         group =
             let
@@ -92,13 +95,13 @@ used i puzzle =
                     -- index of group
                     x // 3 + y // 3 * 3
 
-                i =
+                gi =
                     -- index within group
-                    (x % 3) // 3 + (y % 3) * 3
+                    (x % 3) + (y % 3) * 3
             in
-                get g [] (groups puzzle) |> removeAt i
+                get g [] (groups puzzle) |> removeAt gi
     in
-        row ++ column ++ group |> unique
+        row ++ column ++ group |> List.filter ((/=) 0) |> unique
 
 
 eliminateCrowds : Possible -> Possible

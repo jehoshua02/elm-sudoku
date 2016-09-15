@@ -10,6 +10,7 @@ module Sudoku.Puzzle
 
 import Set
 import Sudoku.Grid exposing (rows, columns, groups)
+import Sudoku.Possible as Possible
 
 
 type alias Puzzle =
@@ -46,5 +47,26 @@ solve : Puzzle -> Result Error Puzzle
 solve puzzle =
     if solved puzzle then
         Ok puzzle
-    else
+    else if puzzle |> List.all ((/=) 0) then
         Err Unsolvable
+    else
+        let
+            before =
+                puzzle
+                    |> Possible.initialize
+
+            after =
+                before
+                    |> Possible.eliminateUsed
+                    |> Possible.eliminateCrowds
+                    |> Possible.eliminateSame
+                    |> Possible.eliminateAligned
+        in
+            if before == after then
+                Err Unsolvable
+            else if after |> List.any ((==) []) then
+                Err Unsolvable
+            else
+                after
+                    |> Possible.toPuzzle
+                    |> solve

@@ -89,6 +89,7 @@ tests =
                         puzzle =
                             Puzzle.empty
                                 |> set 0 2
+                                |> set 76 3
 
                         possible =
                             Possible.initialize puzzle
@@ -98,10 +99,12 @@ tests =
 
                         expected =
                             possible
-                                |> set 0 [ 2 ]
                                 |> eliminate [ 2 ] [1..8]
                                 |> eliminate [ 2 ] ([1..8] |> List.map ((*) 9))
                                 |> eliminate [ 2 ] [ 10, 11, 19, 20 ]
+                                |> eliminate [ 3 ] [ 72, 73, 74, 75, 77, 78, 79, 80 ]
+                                |> eliminate [ 3 ] [ 67, 58, 49, 40, 31, 22, 13, 4 ]
+                                |> eliminate [ 3 ] [ 57, 58, 59, 66, 67, 68 ]
                     in
                         Expect.equal expected actual
             , test "should preserve existing eliminations" <|
