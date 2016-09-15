@@ -20,7 +20,6 @@ npm test
 
 Before you push any code, please format properly.
 
-1. Install [elm-format](https://github.com/avh4/elm-format) in the most idiomatic way available
-2. `elm-format *.elm`
-3. `git add -p`, add only the patches desired, skip sudoku tables in tests
-4. Commit and push
+1. `npm run format`
+2. `git add -p`, add only the patches desired, skip sudoku tables in tests
+3. Commit and push
