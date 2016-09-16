@@ -5,12 +5,16 @@ module Sudoku.Puzzle
         , fromList
         , Error(..)
         , solved
+        , valid
+        , complete
         , solve
         )
 
 import Set
+import List.Extra exposing (findIndex)
 import Sudoku.Grid exposing (rows, columns, groups)
 import Sudoku.Possible as Possible
+import Util exposing (get, set, diff)
 
 
 type alias Puzzle =
@@ -39,8 +43,35 @@ fromList xs =
 
 
 solved : Puzzle -> Bool
-solved xs =
-    rows xs ++ columns xs ++ groups xs |> List.all (List.sort >> (==) [1..9])
+solved puzzle =
+    valid puzzle && complete puzzle
+
+
+valid : Puzzle -> Bool
+valid xs =
+    rows xs
+        ++ columns xs
+        ++ groups xs
+        |> List.all
+            (\chunk ->
+                let
+                    filled =
+                        chunk
+                            |> List.filter ((/=) 0)
+                            |> List.sort
+
+                    unique =
+                        filled
+                            |> Set.fromList
+                            |> Set.toList
+                in
+                    filled == unique
+            )
+
+
+complete : Puzzle -> Bool
+complete xs =
+    List.length xs == 9 * 9 && List.all ((/=) 0) xs
 
 
 solve : Puzzle -> Result Error Puzzle
@@ -53,20 +84,57 @@ solve puzzle =
         let
             before =
                 puzzle
-                    |> Possible.initialize
 
-            after =
+            possible =
                 before
+                    |> Possible.initialize
                     |> Possible.eliminateUsed
                     |> Possible.eliminateCrowds
                     |> Possible.eliminateSame
                     |> Possible.eliminateAligned
+
+            after =
+                Possible.toPuzzle possible
         in
             if before == after then
-                Err Unsolvable
-            else if after |> List.any ((==) []) then
-                Err Unsolvable
+                guess possible
             else
-                after
-                    |> Possible.toPuzzle
-                    |> solve
+                solve after
+
+
+guess : Possible.Possible -> Result Error Puzzle
+guess possible =
+    let
+        m =
+            possible
+                |> findIndex (List.length >> (==) 2)
+    in
+        case m of
+            Nothing ->
+                Err Unsolvable
+
+            Just i ->
+                let
+                    options =
+                        possible
+                            |> get i []
+                            |> List.map
+                                (\n ->
+                                    possible
+                                        |> set i [ n ]
+                                        |> Possible.toPuzzle
+                                )
+                in
+                    case options of
+                        [ a, b ] ->
+                            let
+                                solveA =
+                                    solve a
+                            in
+                                if solveA == Err Unsolvable then
+                                    solve b
+                                else
+                                    solveA
+
+                        _ ->
+                            Err Unsolvable

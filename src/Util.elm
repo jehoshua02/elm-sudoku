@@ -17,5 +17,3 @@ set i x xs =
 diff : List comparable -> List comparable -> List comparable
 diff a b =
     Set.diff (Set.fromList a) (Set.fromList b) |> Set.toList
-
-
