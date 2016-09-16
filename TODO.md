@@ -9,15 +9,21 @@
 
 # TODOING
 
-+ diagnose and fix Possible.eliminateCrowds
-  + it's wreaking havoc on the puzzle, modifying answers
-  + should not touch any place there is only one possible
-  + reenable eliminateCrowds in Puzzle.solve
++ more tests for Puzzle.solve
+  + get a sudoku book or find somewhere online that has puzzles with solutions
 
 # TODO
 
-+ more tests for Puzzle.solve
-  + get a sudoku book or find somewhere online that has puzzles with solutions
++ Puzzle.solve guess and check
+  + when no possibilities can be eliminated
+  + and puzzle still not solved
+  + find a space with only two possible
+    + if no space with only two possible
+    + Err Unsolvable
+  + try first possible (set and recurse)
+  + if first is unsolvable, try second possible (set and recurse)
+  + if Err Unsolvable, return Err Unsolvable
+  + if Ok puzzle, return Ok puzzle
 + don't mix errors from different methods
   + fromList: InvalidLength | OutOfRange
   + solve: Unsolvable
