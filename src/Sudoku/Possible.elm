@@ -107,7 +107,7 @@ used i puzzle =
 eliminateCrowds : Possible -> Possible
 eliminateCrowds possible =
     possible
-        |> eliminateCrowds' rows coordToIndex
+        |> eliminateCrowds' rows (flip coordToIndex)
         |> eliminateCrowds' columns coordToIndex
         |> eliminateCrowds' groups groupToIndex
 
