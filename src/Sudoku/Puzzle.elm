@@ -5,10 +5,12 @@ module Sudoku.Puzzle
         , fromList
         , Error(..)
         , solved
+        , solve
         )
 
 import Set
 import Sudoku.Grid exposing (rows, columns, groups)
+import Sudoku.Possible as Possible
 
 
 type alias Puzzle =
@@ -39,3 +41,32 @@ fromList xs =
 solved : Puzzle -> Bool
 solved xs =
     rows xs ++ columns xs ++ groups xs |> List.all (List.sort >> (==) [1..9])
+
+
+solve : Puzzle -> Result Error Puzzle
+solve puzzle =
+    if solved puzzle then
+        Ok puzzle
+    else if puzzle |> List.all ((/=) 0) then
+        Err Unsolvable
+    else
+        let
+            before =
+                puzzle
+                    |> Possible.initialize
+
+            after =
+                before
+                    |> Possible.eliminateUsed
+                    |> Possible.eliminateCrowds
+                    |> Possible.eliminateSame
+                    |> Possible.eliminateAligned
+        in
+            if before == after then
+                Err Unsolvable
+            else if after |> List.any ((==) []) then
+                Err Unsolvable
+            else
+                after
+                    |> Possible.toPuzzle
+                    |> solve

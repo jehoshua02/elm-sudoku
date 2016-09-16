@@ -5,18 +5,22 @@
 + Possible.eliminateSame
 + Possible.eliminateAligned
 + Run elm-format validate in travis
++ Puzzle.solve
 
 # TODOING
 
-+ Puzzle.solve
-  + return if puzzle solved
-  + eliminate possibilities
-  + if none eliminated, guess and check
-    + unsolvable error if guess and check fails
-  + recurse
++ diagnose and fix Possible.eliminateCrowds
+  + it's wreaking havoc on the puzzle, modifying answers
+  + should not touch any place there is only one possible
+  + reenable eliminateCrowds in Puzzle.solve
 
 # TODO
 
++ more tests for Puzzle.solve
+  + get a sudoku book or find somewhere online that has puzzles with solutions
++ don't mix errors from different methods
+  + fromList: InvalidLength | OutOfRange
+  + solve: Unsolvable
 + Puzzle.make
   + empty puzzle
   + a few random numbers

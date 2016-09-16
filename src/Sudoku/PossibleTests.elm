@@ -89,6 +89,7 @@ tests =
                         puzzle =
                             Puzzle.empty
                                 |> set 0 2
+                                |> set 76 3
 
                         possible =
                             Possible.initialize puzzle
@@ -98,10 +99,12 @@ tests =
 
                         expected =
                             possible
-                                |> set 0 [ 2 ]
                                 |> eliminate [ 2 ] [1..8]
                                 |> eliminate [ 2 ] ([1..8] |> List.map ((*) 9))
                                 |> eliminate [ 2 ] [ 10, 11, 19, 20 ]
+                                |> eliminate [ 3 ] [ 72, 73, 74, 75, 77, 78, 79, 80 ]
+                                |> eliminate [ 3 ] [ 67, 58, 49, 40, 31, 22, 13, 4 ]
+                                |> eliminate [ 3 ] [ 57, 58, 59, 66, 67, 68 ]
                     in
                         Expect.equal expected actual
             , test "should preserve existing eliminations" <|
@@ -148,24 +151,44 @@ tests =
                     let
                         possible =
                             Possible.initialize Puzzle.empty
-                                -- eliminate 7 in a row, except for one
+                                -- eliminate in a row, except for one
                                 |>
-                                    eliminate [ 7 ] [1..8]
+                                    eliminate [ 1 ] [1..8]
                                 -- eliminate 2 in column, except for one
                                 |>
                                     eliminate [ 2 ] [ 10, 19, 28, 37, 46, 55, 64, 73 ]
                                 -- eliminate 5 in group, except for one
                                 |>
-                                    eliminate [ 5 ] [ 0, 1, 9, 10, 11, 18, 19, 20 ]
+                                    eliminate [ 3 ] [ 0, 1, 9, 10, 11, 18, 19, 20 ]
+                                -- eliminate 4 in middle group
+                                |>
+                                    eliminate [ 4 ] [ 30, 31, 32, 39, 41, 48, 49, 50 ]
+                                -- eliminate 5 in last group
+                                |>
+                                    eliminate [ 5 ] [ 60, 61, 62, 69, 70, 71, 78, 79 ]
+                                -- eliminate 6 in middle row
+                                |>
+                                    eliminate [ 6 ] [ 36, 37, 38, 39, 40, 41, 42, 44 ]
+                                -- eliminate 7 in second row
+                                |>
+                                    eliminate [ 7 ] [ 9, 10, 11, 12, 13, 14, 15, 16 ]
+                                -- eliminate 8 in 7th column
+                                |>
+                                    eliminate [ 8 ] [ 7, 16, 25, 43, 52, 61, 70, 79 ]
 
                         actual =
                             Possible.eliminateCrowds possible
 
                         expected =
                             possible
-                                |> set 0 [ 7 ]
+                                |> set 0 [ 1 ]
                                 |> set 1 [ 2 ]
-                                |> set 2 [ 5 ]
+                                |> set 2 [ 3 ]
+                                |> set 40 [ 4 ]
+                                |> set 80 [ 5 ]
+                                |> set 43 [ 6 ]
+                                |> set 17 [ 7 ]
+                                |> set 34 [ 8 ]
                     in
                         Expect.equal expected actual
             ]
