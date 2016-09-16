@@ -44,6 +44,7 @@ toPuzzle possible =
                 case xs of
                     [ n ] ->
                         n
+
                     _ ->
                         0
             )

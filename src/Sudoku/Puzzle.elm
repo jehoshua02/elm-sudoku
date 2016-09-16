@@ -54,12 +54,11 @@ solve puzzle =
             before =
                 puzzle
                     |> Possible.initialize
-                    |> Debug.log "before"
 
             after =
                 before
                     |> Possible.eliminateUsed
-                    --|> Possible.eliminateCrowds
+                    |> Possible.eliminateCrowds
                     |> Possible.eliminateSame
                     |> Possible.eliminateAligned
         in

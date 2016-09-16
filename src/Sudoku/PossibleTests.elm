@@ -152,21 +152,29 @@ tests =
                         possible =
                             Possible.initialize Puzzle.empty
                                 -- eliminate in a row, except for one
-                                |> eliminate [ 1 ] [ 1..8 ]
+                                |>
+                                    eliminate [ 1 ] [1..8]
                                 -- eliminate 2 in column, except for one
-                                |> eliminate [ 2 ] [ 10, 19, 28, 37, 46, 55, 64, 73 ]
+                                |>
+                                    eliminate [ 2 ] [ 10, 19, 28, 37, 46, 55, 64, 73 ]
                                 -- eliminate 5 in group, except for one
-                                |> eliminate [ 3 ] [ 0, 1, 9, 10, 11, 18, 19, 20 ]
+                                |>
+                                    eliminate [ 3 ] [ 0, 1, 9, 10, 11, 18, 19, 20 ]
                                 -- eliminate 4 in middle group
-                                |> eliminate [ 4 ] [ 30, 31, 32, 39, 41, 48, 49, 50 ]
+                                |>
+                                    eliminate [ 4 ] [ 30, 31, 32, 39, 41, 48, 49, 50 ]
                                 -- eliminate 5 in last group
-                                |> eliminate [ 5 ] [ 60, 61, 62, 69, 70, 71, 78, 79 ]
+                                |>
+                                    eliminate [ 5 ] [ 60, 61, 62, 69, 70, 71, 78, 79 ]
                                 -- eliminate 6 in middle row
-                                |> eliminate [ 6 ] [ 36, 37, 38, 39, 40, 41, 42, 44 ]
+                                |>
+                                    eliminate [ 6 ] [ 36, 37, 38, 39, 40, 41, 42, 44 ]
                                 -- eliminate 7 in second row
-                                |> eliminate [ 7 ] [ 9, 10, 11, 12, 13, 14, 15, 16 ]
+                                |>
+                                    eliminate [ 7 ] [ 9, 10, 11, 12, 13, 14, 15, 16 ]
                                 -- eliminate 8 in 7th column
-                                |> eliminate [ 8 ] [ 7, 16, 25, 43, 52, 61, 70, 79 ]
+                                |>
+                                    eliminate [ 8 ] [ 7, 16, 25, 43, 52, 61, 70, 79 ]
 
                         actual =
                             Possible.eliminateCrowds possible
