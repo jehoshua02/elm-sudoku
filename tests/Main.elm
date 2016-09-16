@@ -7,6 +7,7 @@ import Test exposing (..)
 import Sudoku.PuzzleTests
 import Sudoku.PossibleTests
 import Sudoku.GridTests
+import Sudoku.PuzzleSolveTests
 
 
 tests : Test
@@ -15,6 +16,7 @@ tests =
         [ Sudoku.GridTests.tests
         , Sudoku.PuzzleTests.tests
         , Sudoku.PossibleTests.tests
+        , Sudoku.PuzzleSolveTests.tests
         ]
 
 

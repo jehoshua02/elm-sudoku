@@ -60,7 +60,7 @@ solve puzzle =
                     |> Possible.eliminateUsed
                     |> Possible.eliminateCrowds
                     |> Possible.eliminateSame
-                    |> Possible.eliminateAligned
+                    --|> Possible.eliminateAligned
         in
             if before == after then
                 Err Unsolvable
