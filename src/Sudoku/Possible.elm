@@ -58,7 +58,13 @@ eliminate xs is possible =
 
         i :: is ->
             possible
-                |> updateAt i (flip diff xs)
+                |> updateAt i
+                    (\existing ->
+                        if List.length existing == 1 then
+                            existing
+                        else
+                            diff existing xs
+                    )
                 |> Maybe.withDefault possible
                 |> eliminate xs is
 

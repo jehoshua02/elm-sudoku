@@ -71,6 +71,21 @@ tests =
                                 |> set 0 [ 1, 2, 3, 4, 6, 7, 8, 9 ]
                     in
                         Expect.equal expected actual
+            , test "should not eliminate last possible" <|
+                \() ->
+                    let
+                        possible =
+                            Possible.initialize Puzzle.empty
+                                |> set 0 [ 5 ]
+
+                        actual =
+                            possible
+                                |> Possible.eliminate [ 5 ] [ 0 ]
+
+                        expected =
+                            possible
+                    in
+                        Expect.equal expected actual
             ]
         , describe "eliminateUsed"
             [ test "should eliminate nothing" <|
