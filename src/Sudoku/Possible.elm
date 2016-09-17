@@ -82,10 +82,11 @@ eliminateUsed possible =
         possible
             |> List.indexedMap
                 (\i xs ->
-                    (i, used i puzzle)
+                    ( i, used i puzzle )
                 )
-            |> flip List.foldl possible
-                (\(i, xs) possible ->
+            |> flip List.foldl
+                possible
+                (\( i, xs ) possible ->
                     possible
                         |> eliminate xs [ i ]
                 )
