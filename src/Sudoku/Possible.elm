@@ -175,6 +175,8 @@ eliminateSame' chunks index possible =
                             in
                                 if List.length xs == limit then
                                     Nothing
+                                else if List.length xs == 1 then
+                                    Nothing
                                 else if List.length xs /= List.length is then
                                     Nothing
                                 else
