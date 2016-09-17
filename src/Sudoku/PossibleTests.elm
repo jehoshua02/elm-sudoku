@@ -71,6 +71,21 @@ tests =
                                 |> set 0 [ 1, 2, 3, 4, 6, 7, 8, 9 ]
                     in
                         Expect.equal expected actual
+            , test "should not eliminate last possible" <|
+                \() ->
+                    let
+                        possible =
+                            Possible.initialize Puzzle.empty
+                                |> set 0 [ 5 ]
+
+                        actual =
+                            possible
+                                |> Possible.eliminate [ 5 ] [ 0 ]
+
+                        expected =
+                            possible
+                    in
+                        Expect.equal expected actual
             ]
         , describe "eliminateUsed"
             [ test "should eliminate nothing" <|
@@ -129,6 +144,26 @@ tests =
                                 |> eliminate [ 2 ] [1..8]
                                 |> eliminate [ 2 ] ([1..8] |> List.map ((*) 9))
                                 |> eliminate [ 2 ] [ 10, 11, 19, 20 ]
+                    in
+                        Expect.equal expected actual
+            , test "should not eliminate last possible" <|
+                \() ->
+                    let
+                        possible =
+                            Possible.initialize Puzzle.empty
+                                |> set 0 [ 5 ]
+                                |> set 1 [ 5 ]
+
+                        actual =
+                            possible
+                                |> Possible.eliminateUsed
+
+                        expected =
+                            possible
+                                |> eliminate [ 5 ] [0..8]
+                                |> eliminate [ 5 ] ([0..8] |> List.map ((*) 9))
+                                |> eliminate [ 5 ] ([0..8] |> List.map (\i -> i * 9 + 1))
+                                |> eliminate [ 5 ] [ 0, 1, 2, 9, 10, 11, 18, 19, 20 ]
                     in
                         Expect.equal expected actual
             ]
@@ -191,6 +226,22 @@ tests =
                                 |> set 34 [ 8 ]
                     in
                         Expect.equal expected actual
+            , test "should not eliminate last possible" <|
+                \() ->
+                    let
+                        possible =
+                            Possible.initialize Puzzle.empty
+                                |> eliminate [ 3 ] [ 30, 31, 32, 39, 40, 48, 49, 50 ]
+                                |> set 41 [ 4 ]
+
+                        actual =
+                            possible
+                                |> Possible.eliminateCrowds
+
+                        expected =
+                            possible
+                    in
+                        Expect.equal expected actual
             ]
         , describe "eliminateSame"
             [ test "should eliminate nothing" <|
@@ -237,6 +288,25 @@ tests =
                                 |> eliminate [ 6, 7, 8, 9 ] [ 36, 45, 54, 63, 72 ]
                     in
                         Expect.equal expected actual
+            , test "should not eliminate last possible" <|
+                \() ->
+                    let
+                        possible =
+                            Possible.initialize Puzzle.empty
+                                |> set 3 [ 1, 2 ]
+                                |> set 8 [ 1, 2 ]
+                                |> set 0 [ 1 ]
+
+                        actual =
+                            Possible.eliminateSame possible
+
+                        expected =
+                            possible
+                                |> eliminate [ 1, 2 ] [0..8]
+                                |> set 3 [ 1, 2 ]
+                                |> set 8 [ 1, 2 ]
+                    in
+                        Expect.equal expected actual
             ]
         , describe "eliminateAligned"
             [ test "should eliminate nothing" <|
@@ -281,6 +351,22 @@ tests =
                                 |> eliminate [ 5 ] [ 9, 10, 11, 15, 16, 17 ]
                                 |> eliminate [ 6 ] [ 4, 13, 22, 58, 67, 76 ]
                                 |> eliminate [ 7 ] [ 72, 73, 74, 78, 79, 80 ]
+                    in
+                        Expect.equal expected actual
+            , test "should not eliminate last possible" <|
+                \() ->
+                    let
+                        possible =
+                            Possible.initialize Puzzle.empty
+                                |> eliminate [ 5 ] [ 3, 4, 5, 12, 21, 22, 23 ]
+                                |> set 9 [ 5 ]
+
+                        actual =
+                            Possible.eliminateAligned possible
+
+                        expected =
+                            possible
+                                |> eliminate [ 5 ] [ 9, 10, 11, 15, 16, 17 ]
                     in
                         Expect.equal expected actual
             ]
