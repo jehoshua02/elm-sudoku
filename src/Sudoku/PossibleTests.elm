@@ -146,6 +146,26 @@ tests =
                                 |> eliminate [ 2 ] [ 10, 11, 19, 20 ]
                     in
                         Expect.equal expected actual
+            , test "should not eliminate last possible" <|
+                \() ->
+                    let
+                        possible =
+                            Possible.initialize Puzzle.empty
+                                |> set 0 [ 5 ]
+                                |> set 1 [ 5 ]
+
+                        actual =
+                            possible
+                                |> Possible.eliminateUsed
+
+                        expected =
+                            possible
+                                |> eliminate [ 5 ] [0..8]
+                                |> eliminate [ 5 ] ([0..8] |> List.map ((*) 9))
+                                |> eliminate [ 5 ] ([0..8] |> List.map (\i -> i * 9 + 1))
+                                |> eliminate [ 5 ] [ 0, 1, 2, 9, 10, 11, 18, 19, 20 ]
+                    in
+                        Expect.equal expected actual
             ]
         , describe "eliminateCrowds"
             [ test "should eliminate nothing" <|

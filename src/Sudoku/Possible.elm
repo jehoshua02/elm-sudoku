@@ -60,10 +60,14 @@ eliminate xs is possible =
             possible
                 |> updateAt i
                     (\existing ->
-                        if List.length existing == 1 then
-                            existing
-                        else
-                            diff existing xs
+                        let
+                            next =
+                                diff existing xs
+                        in
+                            if List.length next == 0 then
+                                existing
+                            else
+                                diff existing xs
                     )
                 |> Maybe.withDefault possible
                 |> eliminate xs is
@@ -78,9 +82,12 @@ eliminateUsed possible =
         possible
             |> List.indexedMap
                 (\i xs ->
+                    (i, used i puzzle)
+                )
+            |> flip List.foldl possible
+                (\(i, xs) possible ->
                     possible
-                        |> get i []
-                        |> flip diff (used i puzzle)
+                        |> eliminate xs [ i ]
                 )
 
 
