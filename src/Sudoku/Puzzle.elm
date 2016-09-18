@@ -59,8 +59,9 @@ solve puzzle =
                 before
                     |> Possible.eliminateUsed
                     |> Possible.eliminateCrowds
-                    |> Possible.eliminateSame
-                    |> Possible.eliminateAligned
+
+            --|> Possible.eliminateSame
+            --|> Possible.eliminateAligned
         in
             if before == after then
                 Err Unsolvable
