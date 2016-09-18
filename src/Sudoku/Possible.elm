@@ -78,18 +78,27 @@ eliminateUsed possible =
     let
         puzzle =
             toPuzzle possible
-    in
-        possible
-            |> List.indexedMap
-                (\i xs ->
-                    ( i, used i puzzle )
-                )
-            |> flip List.foldl
-                possible
-                (\( i, xs ) possible ->
+
+        before =
+            possible
+
+        after =
+            before
+                |> List.indexedMap
+                    (\i xs ->
+                        ( i, used i puzzle )
+                    )
+                |> flip List.foldl
                     possible
-                        |> eliminate xs [ i ]
-                )
+                    (\( i, xs ) possible ->
+                        possible
+                            |> eliminate xs [ i ]
+                    )
+    in
+        if before == after then
+            before
+        else
+            eliminateUsed after
 
 
 used : Int -> Puzzle -> List Int
