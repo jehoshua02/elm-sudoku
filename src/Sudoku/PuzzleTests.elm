@@ -51,6 +51,21 @@ tests =
             , test "should say this puzzle is valid" <|
                 \() ->
                     Expect.equal True (Puzzle.valid solvedPuzzle)
+            , test "should say all these puzzles are invalid" <|
+                \() ->
+                    let
+                        puzzles =
+                            [ solvedPuzzle |> set 0 9
+                            , solvedPuzzle |> set 49 4
+                            , solvedPuzzle |> set 80 9
+                            ]
+
+                        actual =
+                            puzzles
+                                |> List.map Puzzle.valid
+                                |> List.all ((==) False)
+                    in
+                        Expect.equal True actual
             ]
         , describe "solve"
             [ test "should say this puzzle is already solved" <|
