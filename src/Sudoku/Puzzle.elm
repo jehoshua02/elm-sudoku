@@ -47,7 +47,9 @@ solved puzzle =
 
 valid : Puzzle -> Bool
 valid xs =
-    rows xs ++ columns xs ++ groups xs
+    rows xs
+        ++ columns xs
+        ++ groups xs
         |> List.all
             (\chunk ->
                 let
@@ -88,7 +90,8 @@ solve puzzle =
                     |> Possible.eliminateCrowds
                     --|> Possible.eliminateSame
                     --|> Possible.eliminateAligned
-                    |> Possible.toPuzzle
+                    |>
+                        Possible.toPuzzle
         in
             if before == after then
                 Err Unsolvable
