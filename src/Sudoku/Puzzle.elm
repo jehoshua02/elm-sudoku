@@ -5,6 +5,7 @@ module Sudoku.Puzzle
         , fromList
         , Error(..)
         , solved
+        , valid
         , solve
         )
 
@@ -43,6 +44,26 @@ solved xs =
     rows xs ++ columns xs ++ groups xs |> List.all (List.sort >> (==) [1..9])
 
 
+valid : Puzzle -> Bool
+valid xs =
+    rows xs ++ columns xs ++ groups xs
+        |> List.all
+            (\chunk ->
+                let
+                    filled =
+                        chunk
+                            |> List.filter ((/=) 0)
+                            |> List.sort
+
+                    unique =
+                        filled
+                            |> Set.fromList
+                            |> Set.toList
+                in
+                    filled == unique
+            )
+
+
 solve : Puzzle -> Result Error Puzzle
 solve puzzle =
     if solved puzzle then
@@ -53,21 +74,18 @@ solve puzzle =
         let
             before =
                 puzzle
-                    |> Possible.initialize
 
             after =
                 before
+                    |> Possible.initialize
                     |> Possible.eliminateUsed
                     |> Possible.eliminateCrowds
-
-            --|> Possible.eliminateSame
-            --|> Possible.eliminateAligned
+                    --|> Possible.eliminateSame
+                    --|> Possible.eliminateAligned
+                    |> Possible.toPuzzle
         in
             if before == after then
                 Err Unsolvable
-            else if after |> List.any ((==) []) then
-                Err Unsolvable
             else
                 after
-                    |> Possible.toPuzzle
                     |> solve

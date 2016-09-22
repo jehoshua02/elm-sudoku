@@ -39,6 +39,19 @@ tests =
                 \() ->
                     Expect.equal True (Puzzle.solved solvedPuzzle)
             ]
+        , describe "valid"
+            [ test "should say this puzzle is invalid" <|
+                \() ->
+                    let
+                        puzzle =
+                            solvedPuzzle
+                                |> set 49 4
+                    in
+                        Expect.equal False (Puzzle.valid puzzle)
+            , test "should say this puzzle is valid" <|
+                \() ->
+                    Expect.equal True (Puzzle.valid solvedPuzzle)
+            ]
         , describe "solve"
             [ test "should say this puzzle is already solved" <|
                 \() ->
