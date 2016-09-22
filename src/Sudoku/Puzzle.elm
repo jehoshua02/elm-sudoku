@@ -6,6 +6,7 @@ module Sudoku.Puzzle
         , Error(..)
         , solved
         , valid
+        , complete
         , solve
         )
 
@@ -40,8 +41,8 @@ fromList xs =
 
 
 solved : Puzzle -> Bool
-solved xs =
-    rows xs ++ columns xs ++ groups xs |> List.all (List.sort >> (==) [1..9])
+solved puzzle =
+    valid puzzle && complete puzzle
 
 
 valid : Puzzle -> Bool
@@ -62,6 +63,11 @@ valid xs =
                 in
                     filled == unique
             )
+
+
+complete : Puzzle -> Bool
+complete xs =
+    xs |> List.all ((/=) 0)
 
 
 solve : Puzzle -> Result Error Puzzle
