@@ -8,6 +8,7 @@ import Sudoku.PuzzleTests
 import Sudoku.PossibleTests
 import Sudoku.GridTests
 import Sudoku.PuzzleSolveTests
+import Sudoku.EvilPuzzleTests
 
 
 tests : Test
@@ -17,6 +18,7 @@ tests =
         , Sudoku.PuzzleTests.tests
         , Sudoku.PossibleTests.tests
         , Sudoku.PuzzleSolveTests.tests
+        , Sudoku.EvilPuzzleTests.tests
         ]
 
 

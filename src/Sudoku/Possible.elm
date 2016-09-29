@@ -95,10 +95,7 @@ eliminateUsed possible =
                             |> eliminate xs [ i ]
                     )
     in
-        if before == after then
-            before
-        else
-            eliminateUsed after
+        after
 
 
 used : Int -> Puzzle -> List Int
@@ -220,47 +217,74 @@ eliminateAligned possible =
                                     group
                                         |> findIndices (List.member n)
 
+                                head =
+                                    is
+                                        |> List.head
+                                        |> Maybe.withDefault 0
+
                                 same =
                                     unique >> List.length >> (==) 1
 
-                                row =
+                                rowInGroup =
                                     (flip (//) 3)
 
-                                column =
+                                rowInPuzzle =
+                                    (+) ((g // 3) * 3)
+
+                                indexInRow =
+                                    (\i -> i % 3 + (g % 3) * 3)
+
+                                columnInGroup =
                                     (flip (%) 3)
+
+                                columnInPuzzle =
+                                    (+) ((g % 3) * 3)
+
+                                indexInColumn =
+                                    (\i -> i // 3 + (g // 3) * 3)
+
+                                sameRow =
+                                    is |> List.map rowInGroup |> same
+
+                                sameColumn =
+                                    is |> List.map columnInGroup |> same
                             in
-                                if List.length is == 0 then
+                                if List.length is <= 1 then
+                                    -- eliminateUsed or eliminateCrowds will handle these
                                     []
-                                else if is |> List.map row |> same then
-                                    let
-                                        y =
-                                            is
-                                                |> List.head
-                                                |> Maybe.withDefault 0
-                                                |> row
-                                                |> (+) ((g // 3) * 3)
-                                    in
-                                        is
-                                            |> List.map
-                                                (\i -> i % 3 + g % 3 * 3)
-                                            |> diff [0..8]
-                                            |> List.map (flip coordToIndex y)
-                                else if is |> List.map column |> same then
-                                    let
-                                        x =
-                                            is
-                                                |> List.head
-                                                |> Maybe.withDefault 0
-                                                |> column
-                                                |> (+) (g // 3 * 3)
-                                    in
-                                        is
-                                            |> List.map
-                                                (\i -> i // 3 + g // 3 * 3)
-                                            |> diff [0..8]
-                                            |> List.map (coordToIndex x)
                                 else
-                                    []
+                                    let
+                                        rowEliminations =
+                                            if not sameRow then
+                                                []
+                                            else
+                                                let
+                                                    y =
+                                                        head
+                                                            |> rowInGroup
+                                                            |> rowInPuzzle
+                                                in
+                                                    is
+                                                        |> List.map indexInRow
+                                                        |> diff [0..8]
+                                                        |> List.map (flip coordToIndex y)
+
+                                        columnEliminations =
+                                            if not sameColumn then
+                                                []
+                                            else
+                                                let
+                                                    x =
+                                                        head
+                                                            |> columnInGroup
+                                                            |> columnInPuzzle
+                                                in
+                                                    is
+                                                        |> List.map indexInColumn
+                                                        |> diff [0..8]
+                                                        |> List.map (coordToIndex x)
+                                    in
+                                        rowEliminations ++ columnEliminations
                         )
                     |> flip List.foldl
                         possible

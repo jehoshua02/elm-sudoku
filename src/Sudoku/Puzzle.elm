@@ -83,18 +83,38 @@ solve puzzle =
             before =
                 puzzle
 
-            after =
+            possible =
                 before
                     |> Possible.initialize
                     |> Possible.eliminateUsed
                     |> Possible.eliminateCrowds
-                    --|> Possible.eliminateSame
-                    --|> Possible.eliminateAligned
-                    |>
-                        Possible.toPuzzle
+                    |> Possible.eliminateSame
+                    |> Possible.eliminateAligned
+
+            after =
+                Possible.toPuzzle possible
         in
             if before == after then
                 Err Unsolvable
             else
-                after
-                    |> solve
+                solve after
+
+
+
+--guess : Possible -> Result Error Puzzle
+--guess possible =
+--    let
+--        is = guesses
+--        a =
+--        b =
+--    in
+--        if a /= possible then
+--            solve a
+--            Err Unsolvable
+--        solved
+--guesses = Possible -> List Int
+--guesses possible =
+--    possible
+--        |> List.indexedMap (,)
+--        |> List.filter
+--            (\(_, xs) -> List.length xs /= 2)
