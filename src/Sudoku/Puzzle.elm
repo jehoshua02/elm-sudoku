@@ -11,8 +11,10 @@ module Sudoku.Puzzle
         )
 
 import Set
+import List.Extra exposing (findIndex)
 import Sudoku.Grid exposing (rows, columns, groups)
 import Sudoku.Possible as Possible
+import Util exposing (get, set)
 
 
 type alias Puzzle =
@@ -95,26 +97,44 @@ solve puzzle =
                 Possible.toPuzzle possible
         in
             if before == after then
-                Err Unsolvable
+                guess possible
             else
                 solve after
 
 
+guess : Possible.Possible -> Result Error Puzzle
+guess possible =
+    let
+        m =
+            possible
+                |> findIndex (List.length >> (==) 2)
+    in
+        case m of
+            Nothing ->
+                Err Unsolvable
 
---guess : Possible -> Result Error Puzzle
---guess possible =
---    let
---        is = guesses
---        a =
---        b =
---    in
---        if a /= possible then
---            solve a
---            Err Unsolvable
---        solved
---guesses = Possible -> List Int
---guesses possible =
---    possible
---        |> List.indexedMap (,)
---        |> List.filter
---            (\(_, xs) -> List.length xs /= 2)
+            Just i ->
+                let
+                    options =
+                        possible
+                            |> get i []
+                            |> List.map
+                                (\n ->
+                                    possible
+                                        |> set i [ n ]
+                                        |> Possible.toPuzzle
+                                )
+                in
+                    case options of
+                        [ a, b ] ->
+                            let
+                                solveA =
+                                    solve a
+                            in
+                                if solveA == Err Unsolvable then
+                                    solve b
+                                else
+                                    solveA
+
+                        _ ->
+                            Err Unsolvable
