@@ -8,6 +8,8 @@ module Sudoku.Possible
         , eliminateCrowds
         , eliminateSame
         , eliminateAligned
+        , used
+        , unused
         )
 
 import Set
@@ -123,6 +125,11 @@ used i puzzle =
                 get g [] (groups puzzle) |> removeAt gi
     in
         row ++ column ++ group |> List.filter ((/=) 0) |> unique
+
+
+unused : Int -> Puzzle -> List Int
+unused i puzzle =
+    used i puzzle |> flip diff [1..9]
 
 
 eliminateCrowds : Possible -> Possible

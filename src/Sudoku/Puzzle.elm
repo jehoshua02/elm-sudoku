@@ -3,6 +3,7 @@ module Sudoku.Puzzle
         ( Puzzle
         , empty
         , fromList
+        , make
         , Error(..)
         , solved
         , valid
@@ -14,7 +15,7 @@ import Set
 import List.Extra exposing (findIndex)
 import Sudoku.Grid exposing (rows, columns, groups)
 import Sudoku.Possible as Possible
-import Util exposing (get, set)
+import Util exposing (get, set, diff, randomItem)
 
 
 type alias Puzzle =
@@ -40,6 +41,39 @@ fromList xs =
         Err OutOfRange
     else
         Ok xs
+
+
+make : Float -> { puzzle : Puzzle, solution : Puzzle }
+make percent =
+    -- first, fill in puzzle one cell at a time
+    -- this is the solution
+    -- second, remove numbers from solution up to percent
+    -- this is the puzzle
+    let
+        solution =
+            empty
+                |> List.indexedMap (,)
+                |> List.foldl
+                    (\( i, _ ) puzzle ->
+                        let
+                            random =
+                                puzzle
+                                    |> Possible.unused i
+                                    |> randomItem
+                        in
+                            case random of
+                                Nothing ->
+                                    puzzle
+
+                                Just x ->
+                                    puzzle
+                                        |> set i x
+                    )
+
+        puzzle =
+            empty
+    in
+        { puzzle = puzzle, solution = solution }
 
 
 solved : Puzzle -> Bool
@@ -71,7 +105,7 @@ valid xs =
 
 complete : Puzzle -> Bool
 complete xs =
-    xs |> List.all ((/=) 0)
+    List.length xs == 9 * 9 && List.all ((/=) 0) xs
 
 
 solve : Puzzle -> Result Error Puzzle
