@@ -27,10 +27,13 @@ randomItem xs =
             Nothing
         _ ->
             let
-                randomInt =
+                seed =
+                    Random.initialSeed 0
+
+                generator =
                     Random.int 0 ((List.length xs) - 1)
 
-                i =
-                    Random.generate identity randomInt
+                (i, _) =
+                    Random.step generator seed
             in
                 getAt i xs

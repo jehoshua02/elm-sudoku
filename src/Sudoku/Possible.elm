@@ -129,7 +129,8 @@ used i puzzle =
 
 unused : Int -> Puzzle -> List Int
 unused i puzzle =
-    used i puzzle |> flip diff [1..9]
+    used i puzzle
+        |> diff [1..9]
 
 
 eliminateCrowds : Possible -> Possible

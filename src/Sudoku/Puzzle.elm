@@ -16,6 +16,7 @@ import List.Extra exposing (findIndex)
 import Sudoku.Grid exposing (rows, columns, groups)
 import Sudoku.Possible as Possible
 import Util exposing (get, set, diff, randomItem)
+import Random
 
 
 type alias Puzzle =
@@ -53,7 +54,7 @@ make percent =
         solution =
             empty
                 |> List.indexedMap (,)
-                |> List.foldl
+                |> flip List.foldl empty
                     (\( i, _ ) puzzle ->
                         let
                             random =
