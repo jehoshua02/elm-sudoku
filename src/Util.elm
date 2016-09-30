@@ -3,7 +3,6 @@ module Util exposing (..)
 import Set
 import List.Extra exposing (getAt, setAt)
 import Random
-import Platform.Cmd
 
 
 get : Int -> a -> List a -> a
