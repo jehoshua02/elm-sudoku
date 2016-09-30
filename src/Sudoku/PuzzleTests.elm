@@ -108,33 +108,6 @@ tests =
                     in
                         Expect.equal (Ok solvedPuzzle) (Puzzle.solve puzzle)
             ]
-          --, describe "make"
-          --    [ test "should give us valid, incomplete, solvable puzzles" <|
-          --        \() ->
-          --            let
-          --                puzzles =
-          --                    [0..100]
-          --                        |> List.map (toFloat >> (/) 100 >> Puzzle.make)
-          --                actual =
-          --                    puzzles
-          --                        |> List.map
-          --                            (\puzzle ->
-          --                                let
-          --                                    valid =
-          --                                        Puzzle.valid puzzle
-          --                                    complete =
-          --                                        Puzzle.complete puzzle == False
-          --                                    solvable =
-          --                                        Puzzle.solve puzzle
-          --                                            |> Result.toMaybe
-          --                                            |> (/=) Nothing
-          --                                in
-          --                                    valid && complete && solvable
-          --                            )
-          --                        |> List.all ((==) True)
-          --            in
-          --                Expect.equal True actual
-          --    ]
         ]
 
 
