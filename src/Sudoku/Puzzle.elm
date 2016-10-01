@@ -12,10 +12,10 @@ module Sudoku.Puzzle
         )
 
 import Set
-import List.Extra exposing (findIndex)
+import List.Extra exposing (findIndex, updateAt)
 import Sudoku.Grid exposing (rows, columns, groups)
 import Sudoku.Possible as Possible
-import Util exposing (get, set, diff, randomItem)
+import Util exposing (get, set, diff, randomIndex, shuffle)
 import Random
 
 
@@ -44,37 +44,54 @@ fromList xs =
         Ok xs
 
 
-make : Float -> { puzzle : Puzzle, solution : Puzzle }
-make percent =
+make : Random.Seed -> Float -> ({ puzzle : Puzzle, solution : Puzzle }, Random.Seed)
+make seed percent =
     -- first, fill in puzzle one cell at a time
     -- this is the solution
     -- second, remove numbers from solution up to percent
     -- this is the puzzle
     let
-        solution =
-            empty
-                |> List.indexedMap (,)
-                |> flip List.foldl empty
-                    (\( i, _ ) puzzle ->
-                        let
-                            random =
-                                puzzle
-                                    |> Possible.unused i
-                                    |> randomItem
-                        in
-                            case random of
-                                Nothing ->
-                                    puzzle
-
-                                Just x ->
-                                    puzzle
-                                        |> set i x
-                    )
+        (solution, newSeed) =
+            makeSolution seed
 
         puzzle =
             empty
     in
-        { puzzle = puzzle, solution = solution }
+        ({ puzzle = puzzle, solution = solution }, newSeed)
+
+
+makeSolution : Random.Seed -> (Puzzle, Random.Seed)
+makeSolution seed =
+    List.repeat 9 [1..9]
+        |> List.concat
+        |> makeSolution' seed
+
+
+makeSolution' : Random.Seed -> Puzzle -> (Puzzle, Random.Seed)
+makeSolution' seed puzzle =
+    if solved puzzle then
+        (puzzle, seed)
+    else
+        let
+            rows' =
+                rows puzzle
+
+            ( i, newSeed ) =
+                randomIndex seed rows'
+
+            (newRow, newNewSeed) =
+                get i [] rows'
+                    |> shuffle newSeed
+
+            newPuzzle =
+                rows'
+                    |> set i newRow
+                    |> List.concat
+
+            (solution, newNewNewSeed) =
+                makeSolution' newNewSeed newPuzzle
+        in
+            (solution, newNewNewSeed)
 
 
 solved : Puzzle -> Bool

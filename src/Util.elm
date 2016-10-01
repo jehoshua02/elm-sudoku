@@ -1,7 +1,7 @@
 module Util exposing (..)
 
 import Set
-import List.Extra exposing (getAt, setAt)
+import List.Extra exposing (getAt, setAt, removeAt)
 import Random
 
 
@@ -20,20 +20,35 @@ diff a b =
     Set.diff (Set.fromList a) (Set.fromList b) |> Set.toList
 
 
-randomItem : List a -> Maybe a
-randomItem xs =
-    case xs of
-        [] ->
-            Nothing
-        _ ->
-            let
-                seed =
-                    Random.initialSeed 0
+randomIndex : Random.Seed -> List a -> (Int, Random.Seed)
+randomIndex seed xs =
+    let
+        seed =
+            Random.initialSeed 0
 
+        generator =
+            Random.int 0 ((List.length xs) - 1)
+    in
+        Random.step generator seed
+
+
+shuffle : Random.Seed -> List a -> (List a, Random.Seed)
+shuffle seed xs =
+    case xs of
+        [] -> ([], seed)
+        [_] -> (xs, seed)
+        head :: tail ->
+            let
                 generator =
                     Random.int 0 ((List.length xs) - 1)
 
-                (i, _) =
+                (i, newSeed) =
                     Random.step generator seed
+
+                x =
+                    get i head xs
+
+                (tail, newNewSeed) =
+                    shuffle newSeed (removeAt i xs)
             in
-                getAt i xs
+                (x :: tail, newNewSeed)
