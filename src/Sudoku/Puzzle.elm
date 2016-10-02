@@ -81,11 +81,12 @@ makeSolution' seed puzzle =
 
             (newRow, newNewSeed) =
                 get i [] rows'
+                    |> Debug.log "before"
                     |> shuffle newSeed
 
             newPuzzle =
                 rows'
-                    |> set i newRow
+                    |> set i (Debug.log "after" newRow)
                     |> List.concat
 
             (solution, newNewNewSeed) =

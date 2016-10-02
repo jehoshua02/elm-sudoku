@@ -19,7 +19,7 @@ tests =
             (\s p ->
                 let
                     ({ puzzle, solution }, _) =
-                        Puzzle.make (Random.initialSeed s) p
+                        Puzzle.make (Random.initialSeed (Debug.log "s" s)) (Debug.log "p" p)
 
                     actual =
                         { solution =
