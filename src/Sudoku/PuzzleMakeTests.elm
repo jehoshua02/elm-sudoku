@@ -18,7 +18,7 @@ tests =
         [ fuzz2 Fuzz.int Fuzz.percentage "should valid, solvable puzzles" <|
             (\s p ->
                 let
-                    ({ puzzle, solution }, _) =
+                    ( { puzzle, solution }, _ ) =
                         Puzzle.make (Random.initialSeed (Debug.log "s" s)) (Debug.log "p" p)
 
                     actual =

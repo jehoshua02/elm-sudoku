@@ -44,33 +44,33 @@ fromList xs =
         Ok xs
 
 
-make : Random.Seed -> Float -> ({ puzzle : Puzzle, solution : Puzzle }, Random.Seed)
+make : Random.Seed -> Float -> ( { puzzle : Puzzle, solution : Puzzle }, Random.Seed )
 make seed percent =
     -- first, fill in puzzle one cell at a time
     -- this is the solution
     -- second, remove numbers from solution up to percent
     -- this is the puzzle
     let
-        (solution, newSeed) =
+        ( solution, newSeed ) =
             makeSolution seed
 
         puzzle =
             empty
     in
-        ({ puzzle = puzzle, solution = solution }, newSeed)
+        ( { puzzle = puzzle, solution = solution }, newSeed )
 
 
-makeSolution : Random.Seed -> (Puzzle, Random.Seed)
+makeSolution : Random.Seed -> ( Puzzle, Random.Seed )
 makeSolution seed =
     List.repeat 9 [1..9]
         |> List.concat
         |> makeSolution' seed
 
 
-makeSolution' : Random.Seed -> Puzzle -> (Puzzle, Random.Seed)
+makeSolution' : Random.Seed -> Puzzle -> ( Puzzle, Random.Seed )
 makeSolution' seed puzzle =
     if solved puzzle then
-        (puzzle, seed)
+        ( puzzle, seed )
     else
         let
             rows' =
@@ -79,7 +79,7 @@ makeSolution' seed puzzle =
             ( i, newSeed ) =
                 randomIndex seed rows'
 
-            (newRow, newNewSeed) =
+            ( newRow, newNewSeed ) =
                 get i [] rows'
                     |> Debug.log "before"
                     |> shuffle newSeed
@@ -89,10 +89,10 @@ makeSolution' seed puzzle =
                     |> set i (Debug.log "after" newRow)
                     |> List.concat
 
-            (solution, newNewNewSeed) =
+            ( solution, newNewNewSeed ) =
                 makeSolution' newNewSeed newPuzzle
         in
-            (solution, newNewNewSeed)
+            ( solution, newNewNewSeed )
 
 
 solved : Puzzle -> Bool
