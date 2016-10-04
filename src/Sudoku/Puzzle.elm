@@ -53,7 +53,7 @@ make percent =
         -- first, fill in puzzle one cell at a time
         -- this is the solution
         solution =
-            makeSolution
+            makeSolution percent
                 |> Debug.log "solution"
 
         puzzle =
@@ -62,8 +62,8 @@ make percent =
         { puzzle = puzzle, solution = solution }
 
 
-makeSolution : Puzzle
-makeSolution =
+makeSolution : Float -> Puzzle
+makeSolution _ =
     List.repeat 9 [1..9]
         |> List.concat
         |> makeSolution'
