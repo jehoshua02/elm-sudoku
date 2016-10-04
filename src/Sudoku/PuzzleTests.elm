@@ -39,6 +39,47 @@ tests =
                 \() ->
                     Expect.equal True (Puzzle.solved solvedPuzzle)
             ]
+        , describe "valid"
+            [ test "should say this puzzle is invalid" <|
+                \() ->
+                    let
+                        puzzle =
+                            solvedPuzzle
+                                |> set 49 4
+                    in
+                        Expect.equal False (Puzzle.valid puzzle)
+            , test "should say this puzzle is valid" <|
+                \() ->
+                    Expect.equal True (Puzzle.valid solvedPuzzle)
+            , test "should say all these puzzles are invalid" <|
+                \() ->
+                    let
+                        puzzles =
+                            [ solvedPuzzle |> set 0 9
+                            , solvedPuzzle |> set 49 4
+                            , solvedPuzzle |> set 80 9
+                            ]
+
+                        actual =
+                            puzzles
+                                |> List.map Puzzle.valid
+                                |> List.all ((==) False)
+                    in
+                        Expect.equal True actual
+            ]
+        , describe "complete"
+            [ test "should say this puzzle is complete" <|
+                \() ->
+                    Expect.equal True (Puzzle.complete solvedPuzzle)
+            , test "should say this puzzle is incomplete" <|
+                \() ->
+                    let
+                        puzzle =
+                            solvedPuzzle
+                                |> set 45 0
+                    in
+                        Expect.equal False (Puzzle.complete puzzle)
+            ]
         , describe "solve"
             [ test "should say this puzzle is already solved" <|
                 \() ->
