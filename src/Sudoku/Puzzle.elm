@@ -132,31 +132,6 @@ complete xs =
     List.length xs == 9 * 9 && List.all ((/=) 0) xs
 
 
-valid : Puzzle -> Bool
-valid xs =
-    rows xs ++ columns xs ++ groups xs
-        |> List.all
-            (\chunk ->
-                let
-                    filled =
-                        chunk
-                            |> List.filter ((/=) 0)
-                            |> List.sort
-
-                    unique =
-                        filled
-                            |> Set.fromList
-                            |> Set.toList
-                in
-                    filled == unique
-            )
-
-
-complete : Puzzle -> Bool
-complete xs =
-    xs |> List.all ((/=) 0)
-
-
 solve : Puzzle -> Result Error Puzzle
 solve puzzle =
     if solved puzzle then
