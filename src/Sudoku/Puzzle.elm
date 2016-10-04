@@ -130,7 +130,6 @@ valid xs =
 complete : Puzzle -> Bool
 complete xs =
     List.length xs == 9 * 9 && List.all ((/=) 0) xs
-<<<<<<< HEAD
 
 
 valid : Puzzle -> Bool
@@ -156,8 +155,6 @@ valid xs =
 complete : Puzzle -> Bool
 complete xs =
     xs |> List.all ((/=) 0)
-=======
->>>>>>> 863194c... Puzzle.make ... Randoms in Elm are Stupid
 
 
 solve : Puzzle -> Result Error Puzzle
