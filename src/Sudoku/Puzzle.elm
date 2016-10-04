@@ -3,6 +3,7 @@ module Sudoku.Puzzle
         ( Puzzle
         , empty
         , fromList
+        , make
         , Error(..)
         , solved
         , valid
@@ -11,10 +12,12 @@ module Sudoku.Puzzle
         )
 
 import Set
-import List.Extra exposing (findIndex)
+import List.Extra exposing (findIndex, updateAt)
 import Sudoku.Grid exposing (rows, columns, groups)
 import Sudoku.Possible as Possible
-import Util exposing (get, set, diff)
+import Util exposing (get, set, diff, shuffle)
+import Native.Random
+import Trampoline
 
 
 type alias Puzzle =
@@ -40,6 +43,61 @@ fromList xs =
         Err OutOfRange
     else
         Ok xs
+
+
+make : Float -> { puzzle : Puzzle, solution : Puzzle }
+make percent =
+    -- second, remove numbers from solution up to percent
+    -- this is the puzzle
+    let
+        -- first, fill in puzzle one cell at a time
+        -- this is the solution
+        solution =
+            makeSolution percent
+                |> Debug.log "solution"
+
+        puzzle =
+            empty
+    in
+        { puzzle = puzzle, solution = solution }
+
+
+makeSolution : Float -> Puzzle
+makeSolution _ =
+    List.repeat 9 [1..9]
+        |> List.concat
+        |> makeSolution'
+        |> Trampoline.evaluate
+
+
+makeSolution' : Puzzle -> Trampoline.Trampoline Puzzle
+makeSolution' puzzle =
+    Trampoline.jump
+        (\() ->
+            if valid puzzle then
+                Trampoline.done puzzle
+            else
+                let
+                    rows' =
+                        rows puzzle
+
+                    i =
+                        Native.Random.int 0 ((List.length rows') - 1)
+
+                    newRow =
+                        get i [] rows'
+                            |> shuffle
+                            |> Debug.log "after"
+
+                    newPuzzle =
+                        rows'
+                            |> updateAt i shuffle
+                            |> Maybe.withDefault rows'
+                            |> List.concat
+                in
+                    makeSolution' newPuzzle
+                        |> Debug.log "newPuzzle"
+        )
 
 
 solved : Puzzle -> Bool
