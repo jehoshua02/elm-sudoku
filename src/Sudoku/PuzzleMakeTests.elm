@@ -6,11 +6,6 @@ import Fuzz
 import Sudoku.Puzzle as Puzzle exposing (Error(..))
 
 
-limit : Int
-limit =
-    100
-
-
 tests : Test
 tests =
     describe "Puzzle.make"

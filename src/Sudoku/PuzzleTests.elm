@@ -80,19 +80,6 @@ tests =
                     in
                         Expect.equal False (Puzzle.complete puzzle)
             ]
-        , describe "complete"
-            [ test "should say this puzzle is complete" <|
-                \() ->
-                    Expect.equal True (Puzzle.complete solvedPuzzle)
-            , test "should say this puzzle is incomplete" <|
-                \() ->
-                    let
-                        puzzle =
-                            solvedPuzzle
-                                |> set 45 0
-                    in
-                        Expect.equal False (Puzzle.complete puzzle)
-            ]
         , describe "solve"
             [ test "should say this puzzle is already solved" <|
                 \() ->
