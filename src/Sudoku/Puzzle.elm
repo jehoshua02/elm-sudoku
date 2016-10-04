@@ -15,8 +15,9 @@ import Set
 import List.Extra exposing (findIndex, updateAt)
 import Sudoku.Grid exposing (rows, columns, groups)
 import Sudoku.Possible as Possible
-import Util exposing (get, set, diff, randomIndex, shuffle)
-import Random
+import Util exposing (get, set, diff, shuffle)
+import Native.Random
+import Trampoline
 
 
 type alias Puzzle =
@@ -44,55 +45,59 @@ fromList xs =
         Ok xs
 
 
-make : Random.Seed -> Float -> ( { puzzle : Puzzle, solution : Puzzle }, Random.Seed )
-make seed percent =
-    -- first, fill in puzzle one cell at a time
-    -- this is the solution
+make : Float -> { puzzle : Puzzle, solution : Puzzle }
+make percent =
     -- second, remove numbers from solution up to percent
     -- this is the puzzle
     let
-        ( solution, newSeed ) =
-            makeSolution seed
+        -- first, fill in puzzle one cell at a time
+        -- this is the solution
+        solution =
+            makeSolution
+                |> Debug.log "solution"
 
         puzzle =
             empty
     in
-        ( { puzzle = puzzle, solution = solution }, newSeed )
+        { puzzle = puzzle, solution = solution }
 
 
-makeSolution : Random.Seed -> ( Puzzle, Random.Seed )
-makeSolution seed =
+makeSolution : Puzzle
+makeSolution =
     List.repeat 9 [1..9]
         |> List.concat
-        |> makeSolution' seed
+        |> makeSolution'
+        |> Trampoline.evaluate
 
 
-makeSolution' : Random.Seed -> Puzzle -> ( Puzzle, Random.Seed )
-makeSolution' seed puzzle =
-    if solved puzzle then
-        ( puzzle, seed )
-    else
-        let
-            rows' =
-                rows puzzle
+makeSolution' : Puzzle -> Trampoline.Trampoline Puzzle
+makeSolution' puzzle =
+    Trampoline.jump
+        (\() ->
+            if valid puzzle then
+                Trampoline.done puzzle
+            else
+                let
+                    rows' =
+                        rows puzzle
 
-            ( i, newSeed ) =
-                randomIndex seed rows'
+                    i =
+                        Native.Random.int 0 ((List.length rows') - 1)
 
-            ( newRow, newNewSeed ) =
-                get i [] rows'
-                    |> Debug.log "before"
-                    |> shuffle newSeed
+                    newRow =
+                        get i [] rows'
+                            |> shuffle
+                            |> Debug.log "after"
 
-            newPuzzle =
-                rows'
-                    |> set i (Debug.log "after" newRow)
-                    |> List.concat
-
-            ( solution, newNewNewSeed ) =
-                makeSolution' newNewSeed newPuzzle
-        in
-            ( solution, newNewNewSeed )
+                    newPuzzle =
+                        rows'
+                            |> updateAt i shuffle
+                            |> Maybe.withDefault rows'
+                            |> List.concat
+                in
+                    makeSolution' newPuzzle
+                        |> Debug.log "newPuzzle"
+        )
 
 
 solved : Puzzle -> Bool

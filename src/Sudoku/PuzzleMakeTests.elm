@@ -4,7 +4,6 @@ import Test exposing (..)
 import Expect
 import Fuzz
 import Sudoku.Puzzle as Puzzle exposing (Error(..))
-import Random
 
 
 limit : Int
@@ -15,11 +14,11 @@ limit =
 tests : Test
 tests =
     describe "Puzzle.make"
-        [ fuzz2 Fuzz.int Fuzz.percentage "should valid, solvable puzzles" <|
-            (\s p ->
+        [ fuzz Fuzz.percentage "should valid, solvable puzzles" <|
+            (\p ->
                 let
-                    ( { puzzle, solution }, _ ) =
-                        Puzzle.make (Random.initialSeed (Debug.log "s" s)) (Debug.log "p" p)
+                    { puzzle, solution } =
+                        Puzzle.make (Debug.log "p" p)
 
                     actual =
                         { solution =
